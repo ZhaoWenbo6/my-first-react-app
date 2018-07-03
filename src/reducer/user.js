@@ -1,10 +1,14 @@
-import * as ActionTypes from '../consts/index';
-import { actionPayloadReducer } from '../utils/reducer-helper';
+import { returnPayload } from '../utils/reducerHelper';
+import { handleAction } from 'redux-actions';
+import { combineReducers } from 'redux';
 
-export const userName = {
-  [ActionTypes.USER_NAME]: actionPayloadReducer,
-};
+export const USER_INFO = 'USER_INFO';
+const info = handleAction(USER_INFO, returnPayload, {});
 
-export const userAge = {
-  [ActionTypes.USER_AGE]: actionPayloadReducer,
-};
+export const USER_TYPE = 'USER_TYPE';
+const type = handleAction(USER_TYPE, returnPayload, '');
+
+export const MONEY = 'MONEY';
+const money = handleAction(MONEY, returnPayload, '');
+
+export default combineReducers({ info, type, money });
