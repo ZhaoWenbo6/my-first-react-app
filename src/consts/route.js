@@ -13,9 +13,16 @@ export const DEFAULT_ROUTE = '/';
 
 // 活动管理
 export const ACTIVITY_MANAGEMENT = '/ActivityManagement';
+
 export const ACTIVITY_DETAILS = `${ACTIVITY_MANAGEMENT}/ActivityDetails`;
+
 export const ACTIVITY_LIST = `${ACTIVITY_MANAGEMENT}/ActivityList`;
+
 export const CREATE_ACTIVITY = `${ACTIVITY_MANAGEMENT}/CreateActivity`;
+export const BASE_INFO = `${CREATE_ACTIVITY}/BaseInfo`;
+export const ADD_GOODS = `${CREATE_ACTIVITY}/AddGoods`;
+export const SET_REWARDS = `${CREATE_ACTIVITY}/SetRewards`;
+export const ACTIVITY_PREVIEW = `${CREATE_ACTIVITY}/ActivityPreview`;
 
 // 数据看板
 export const DATA_BOARD = '/DateBoard';

@@ -1,17 +1,17 @@
 import React, { Component, Fragment } from 'react';
 import { Route } from 'react-router';
 import { connect } from 'react-redux';
-import { CREATE_ACTIVITY, ACTIVITY_LIST, ACTIVITY_DETAILS } from '../consts/route';
-import CreateActivity from '../containers/ActivityManagement/CreateActivity';
+import { ACTIVITY_LIST, ACTIVITY_DETAILS, CREATE_ACTIVITY } from '../consts/route';
 import AvtivityList from '../containers/ActivityManagement/AvtivityList';
 import ActivityDetails from '../containers/ActivityManagement/ActivityDetails';
+import Create from './create';
 
 class Activity extends Component {
   render() {
     return (
       <Fragment>
         <Route path={ACTIVITY_LIST} component={AvtivityList} />
-        <Route path={CREATE_ACTIVITY} component={CreateActivity} />
+        <Route path={CREATE_ACTIVITY} component={Create} />
         <Route path={ACTIVITY_DETAILS} component={ActivityDetails} />
       </Fragment>
     );

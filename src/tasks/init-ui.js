@@ -6,10 +6,9 @@ import { BrowserRouter, Route } from 'react-router-dom';
 // import { ConnectedRouter } from 'react-router-redux';
 import { AppContainer } from 'react-hot-loader';
 import AppRouter from '../routes';
-// import { LocaleProvider } from 'antd';
-// <LocaleProvider locale={zh_CN}>
-// import zh_CN from 'antd/lib/locale-provider/zh_CN';
-// import 'moment/locale/zh-cn';
+import { LocaleProvider } from 'antd';
+import zh_CN from 'antd/lib/locale-provider/zh_CN';
+import 'moment/locale/zh-cn';
 
 function renderApp(store, history) {
   console.log(store.getState(), history);
@@ -17,7 +16,9 @@ function renderApp(store, history) {
     <AppContainer>
       <Provider store={store}>
         <BrowserRouter>
-          <Route path="/" component={AppRouter} />
+          <LocaleProvider locale={zh_CN}>
+            <Route path="/" component={AppRouter} />
+          </LocaleProvider>
         </BrowserRouter>
       </Provider>
     </AppContainer>,
