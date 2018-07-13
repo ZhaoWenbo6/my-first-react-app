@@ -16,6 +16,7 @@ export function initRemote(serviceUrl = '') {
   shareService = axios.create({
     baseURL: serviceUrl,
     timeout: 10000,
+    withCredentials: process.env.DEPLOY_ENV === 'dev' ? true : false,
     headers: {
       accept: 'application/vnd.api+json',
     },
@@ -28,10 +29,15 @@ function makeService(service, api = {}) {
     url: api.path,
     method: api.method,
     data: api.payload,
+    params: api.params,
     headers: { ...service.defaults.headers },
   });
 }
 
 export function getUser() {
   return makeService(shareService, apiSchema.user()());
+}
+
+export function getClassification(params) {
+  return makeService(shareService, apiSchema.classification(params)());
 }

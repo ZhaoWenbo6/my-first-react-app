@@ -17,6 +17,7 @@ import _ from 'lodash';
 import { CURRENT_STEP } from '../../../reducer/ActivityManagement';
 import { changeCurrentStep } from '../../../actions/CreateActivity';
 import { FLEX_CENTER_CENTER } from '../../../consts/css';
+import { BASE_INFO, ADD_GOODS, SET_REWARDS, ACTIVITY_PREVIEW } from '../../../consts/route';
 
 class CreateActivity extends Component {
   static displayName = 'CreateActivity';
@@ -27,13 +28,17 @@ class CreateActivity extends Component {
   }
 
   next = () => {
-    const { currentStep, dispatch } = this.props;
-    dispatch(changeCurrentStep(CURRENT_STEP, currentStep + 1));
+    const { currentStep, dispatch, routeHistory } = this.props;
+    const nextStep = currentStep + 1;
+    dispatch(changeCurrentStep(CURRENT_STEP, nextStep));
+    routeHistory.push(routeArr[nextStep]);
   };
 
   prev = () => {
-    const { currentStep, dispatch } = this.props;
-    dispatch(changeCurrentStep(CURRENT_STEP, currentStep - 1));
+    const { currentStep, dispatch, routeHistory } = this.props;
+    const prevStep = currentStep - 1;
+    dispatch(changeCurrentStep(CURRENT_STEP, prevStep));
+    routeHistory.push(routeArr[prevStep]);
   };
 
   render() {
@@ -77,10 +82,13 @@ export default connect(mapStateToProps)(CreateActivity);
 function mapStateToProps(state) {
   return {
     currentStep: _.get(state, 'create.currentStep', -1),
+    routeHistory: _.get(state, 'config.routeHistory', {}),
   };
 }
 
 const styleStr = 'width: 100%; height: 100%; margin: 20px 0;';
+
+const routeArr = [BASE_INFO, ADD_GOODS, SET_REWARDS, ACTIVITY_PREVIEW];
 
 const Step = Steps.Step;
 

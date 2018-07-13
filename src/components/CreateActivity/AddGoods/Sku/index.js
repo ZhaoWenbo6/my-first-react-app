@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Radio } from 'antd';
-import { Div } from '../../common/Div';
-import Sku from './Sku';
-import TowerActivity from './TowerActivity';
-import { MARGIN_TEN_ZERO } from '../../../consts/css';
+import { Div } from '../../../common/Div';
+import SelectSKU from './SelectSKU';
+import WriteSKU from './WriteSKU';
+import { MARGIN_TEN_ZERO } from '../../../../consts/css';
 
+const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
-class AddGoods extends Component {
-  static displayName = 'AddGoods';
+
+class Sku extends Component {
+  static displayName = 'Sku';
 
   constructor(props) {
     super(props);
@@ -27,19 +29,17 @@ class AddGoods extends Component {
   render() {
     return (
       <Div>
-        <Div>
-          <RadioGroup onChange={event => this.onChange(event)} value={this.state.value} style={{}}>
-            <Radio value={0}>按SKU设置</Radio>
-            <Radio value={1}>通天塔活动</Radio>
-          </RadioGroup>
-        </Div>
+        <RadioGroup onChange={this.onChange} defaultValue="0">
+          <RadioButton value="0">选择商品</RadioButton>
+          <RadioButton value="1">按sku填写</RadioButton>
+        </RadioGroup>
         <Div styleStr={MARGIN_TEN_ZERO}>{arr[this.state.value].content}</Div>
       </Div>
     );
   }
 }
 
-export default connect(mapStateToProps)(AddGoods);
+export default connect(mapStateToProps)(Sku);
 
 function mapStateToProps(state) {
   return {
@@ -49,11 +49,11 @@ function mapStateToProps(state) {
 
 const arr = [
   {
-    title: 'First',
-    content: <Sku />,
+    title: 'select',
+    content: <SelectSKU />,
   },
   {
-    title: 'Second',
-    content: <TowerActivity />,
+    title: 'write',
+    content: <WriteSKU />,
   },
 ];

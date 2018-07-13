@@ -14,9 +14,15 @@ import { Button } from 'antd';
 import { BASE_INFO } from '../../../consts/route';
 import { changeCurrentStep } from '../../../actions/CreateActivity';
 import { CURRENT_STEP } from '../../../reducer/ActivityManagement';
+import { changeRouteHistory } from '../../../actions/config';
 
 class AvtivityList extends Component {
   static displayName = 'AvtivityList';
+
+  componentDidMount() {
+    const { history, dispatch } = this.props;
+    dispatch(changeRouteHistory(history));
+  }
 
   gotoFirstPage = () => {
     const { history, dispatch } = this.props;

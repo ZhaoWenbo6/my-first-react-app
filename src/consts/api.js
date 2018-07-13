@@ -12,3 +12,6 @@
 export const API_DEFAULT = '/mock/5b320f940a29144fd436edf9';
 
 export const API_USER_INFO = `${API_DEFAULT}/getUserInfo`;
+
+export const CLASSIFICATION_PREFIXES = '/selfProduce';
+export const CLASSIFICATION = `${CLASSIFICATION_PREFIXES}/selectByParentCode.do`;

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import './App.css';
-import { changeUserType } from '../actions/user';
 import _ from 'lodash';
 import { Layout } from 'antd';
 import PageHeader from '../components/PageHeader';
@@ -11,13 +10,6 @@ import PageFooter from '../components/PageFooter';
 
 class App extends Component {
   static displayName = 'App';
-  // static getDerivedStateFromProps(nextProps, prevState) {
-  //   console.log(nextProps, prevState);
-  // }
-
-  onClickHandle = () => {
-    this.props.dispatch(changeUserType('test'));
-  };
 
   render() {
     const { Content } = Layout;
@@ -30,7 +22,7 @@ class App extends Component {
             <Navigation />
             <Layout style={{ padding: '0 24px 24px' }}>
               <PageBreadcrumb />
-              <Content style={{ background: '#fff', padding: 24, margin: 0, minHeight: 280 }}>
+              <Content style={{ background: '#fff', padding: 24, margin: 0 }}>
                 {this.props.children}
               </Content>
             </Layout>

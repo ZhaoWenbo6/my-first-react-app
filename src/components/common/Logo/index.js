@@ -1,3 +1,13 @@
+/*
+ * @Author: Wenbo Zhao
+ * @Date: 2018-07-10 18:16:00
+ * @LastEditors: Wenbo Zhao
+ * @LastEditTime: 2018-07-10 18:17:29
+ * @Description: 
+ * @Company: JD
+ * @Email: zhaowenbo3@jd.com
+ * @motto: Javascript will save your soul
+ */
 import styled, { css } from 'styled-components';
 import JDlogo from '../../../image/logo/JDlogo.png';
 

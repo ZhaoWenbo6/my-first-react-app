@@ -1,5 +1,5 @@
 export const dev = {
-  shareService: 'https://easy-mock.com',
+  shareService: 'http://bjshare.cms.jd.care',
 };
 
 export const beta = {
