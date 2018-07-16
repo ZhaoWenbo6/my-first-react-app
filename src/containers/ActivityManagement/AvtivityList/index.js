@@ -2,11 +2,11 @@
  * @Author: Wenbo Zhao
  * @Date: 2018-07-06 15:29:47
  * @LastEditors: Wenbo Zhao
- * @LastEditTime: 2018-07-06 15:29:47
+ * @LastEditTime: 2018-07-16 18:13:37
  * @Description: 活动列表页
  * @Company: JD
  * @Email: zhaowenbo3@jd.com
- * @motto: Javascript will save your soul
+ * @motto: Always believe that something wonderful is about to happen
  */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';

@@ -2,11 +2,11 @@
  * @Author: Wenbo Zhao
  * @Date: 2018-07-05 18:20:50
  * @LastEditors: Wenbo Zhao
- * @LastEditTime: 2018-07-05 18:31:52
+ * @LastEditTime: 2018-07-16 18:13:26
  * @Description: 通用时间组件
  * @Company: JD
  * @Email: zhaowenbo3@jd.com
- * @motto: Javascript will save your soul
+ * @motto: Always believe that something wonderful is about to happen
  */
 import React, { Component } from 'react';
 import { DatePicker } from 'antd';

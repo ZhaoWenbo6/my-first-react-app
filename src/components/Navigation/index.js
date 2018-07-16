@@ -1,12 +1,20 @@
+/*
+ * @Author: Wenbo Zhao
+ * @Date: 2018-07-16 17:01:36
+ * @LastEditors: Wenbo Zhao
+ * @LastEditTime: 2018-07-16 17:02:26
+ * @Description: 导航栏组件
+ * @Company: JD
+ * @Email: zhaowenbo3@jd.com
+ * @motto: Always believe that something wonderful is about to happen
+ */
 import React, { Component } from 'react';
-// import styled from 'styled-components';
 import { Layout, Menu, Icon } from 'antd';
 import { Link } from 'react-router-dom';
 import {
   NEW_ACTIVITY_TEXT,
   ACTIVITY_LIST,
   ACTIVITY_TEXT_LIST,
-  CREATE_ACTIVITY,
   VIEW_DATA_BY_DAY,
   VIEW_DATA_BY_ACTIVITY,
 } from '../../consts/route';
@@ -18,10 +26,10 @@ class Navigation extends Component {
     const { SubMenu } = Menu;
     const { Sider } = Layout;
     return (
-      <Sider width={200} style={{ background: '#fff' }}>
+      <Sider width={200} style={{ background: '#fff', height: '100%' }}>
         <Menu
           mode="inline"
-          defaultSelectedKeys={['1']}
+          defaultSelectedKeys={['2']}
           defaultOpenKeys={['sub1']}
           style={{ height: '100%', borderRight: 0 }}
         >
@@ -33,9 +41,6 @@ class Navigation extends Component {
               </span>
             }
           >
-            <Menu.Item key="1">
-              <Link to={CREATE_ACTIVITY}>创建活动</Link>
-            </Menu.Item>
             <Menu.Item key="2">
               <Link to={ACTIVITY_LIST}>活动列表</Link>
             </Menu.Item>

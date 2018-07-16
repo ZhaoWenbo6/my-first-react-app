@@ -2,15 +2,16 @@
  * @Author: Wenbo Zhao
  * @Date: 2018-07-02 17:47:41
  * @LastEditors: Wenbo Zhao
- * @LastEditTime: 2018-07-05 16:47:02
+ * @LastEditTime: 2018-07-16 18:13:20
  * @Description: 用户相关业务
  * @Company: JD
  * @Email: zhaowenbo3@jd.com
- * @motto: Javascript will save your soul
+ * @motto: Always believe that something wonderful is about to happen
  */
 import { createPayloadAction } from '../utils/actionHelper';
 import { USER_INFO, USER_TYPE } from '../reducer/user';
 import { changeLoadingState } from './config';
+import { LOGIN_PAGE } from '../consts/url';
 
 export function getUserInfo() {
   return (dispatch, getState) => {
@@ -24,8 +25,13 @@ export function getUserInfo() {
     let parseCookie = {};
     if (getCookie.length !== 0) {
       parseCookie = JSON.parse(decodeURIComponent(getCookie));
-      dispatch(createPayloadAction(USER_INFO, parseCookie));
-      dispatch(changeLoadingState(true));
+      //验证身份，系统异常跳到登录页
+      if (parseCookie === '-1') {
+        window.open(LOGIN_PAGE, '_self');
+      } else {
+        dispatch(createPayloadAction(USER_INFO, parseCookie));
+        dispatch(changeLoadingState(true));
+      }
     }
   };
 }

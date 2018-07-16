@@ -6,17 +6,16 @@
  * @Description: 第二部选择商品组件
  * @Company: JD
  * @Email: zhaowenbo3@jd.com
- * @motto: Javascript will save your soul
+ * @motto: Always believe that something wonderful is about to happen
  */
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Card, Button } from 'antd';
 import SelectFilter from './SelectFilter';
-import PriceFilter from './PriceFilter';
-import DateRange from '../../../../common/DateRange';
 import { Div } from '../../../../common/Div';
 import { FLEX_START_CENTER, FLEX_CENTER_CENTER } from '../../../../../consts/css';
 import GoodsList from './GoodsList';
+import GoodsName from './GoodsName';
 
 class SelectSKU extends Component {
   static displayName = 'SelectSKU';
@@ -34,10 +33,7 @@ class SelectSKU extends Component {
             所属品类： <SelectFilter />
           </Div>
           <Div styleStr={priceStr}>
-            京东价格： <PriceFilter />
-          </Div>
-          <Div styleStr={FLEX_START_CENTER}>
-            上架时间： <DateRange />
+            商品名称： <GoodsName />
           </Div>
           <Div styleStr={FLEX_CENTER_CENTER}>
             <Button type="primary" style={{ margin: '10px' }}>

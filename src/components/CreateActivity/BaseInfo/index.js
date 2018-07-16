@@ -6,7 +6,7 @@
  * @Description: 创建活动第一步
  * @Company: JD
  * @Email: zhaowenbo3@jd.com
- * @motto: Javascript will save your soul
+ * @motto: Always believe that something wonderful is about to happen
  */
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';

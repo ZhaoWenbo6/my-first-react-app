@@ -6,7 +6,7 @@
  * @Description: 
  * @Company: JD
  * @Email: zhaowenbo3@jd.com
- * @motto: Javascript will save your soul
+ * @motto: Always believe that something wonderful is about to happen
  */
 import styled, { css } from 'styled-components';
 import JDlogo from '../../../image/logo/JDlogo.png';

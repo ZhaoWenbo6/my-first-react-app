@@ -1,21 +1,19 @@
 /*
  * @Author: Wenbo Zhao
- * @Date: 2018-07-12 17:46:09
+ * @Date: 2018-07-16 17:52:13
  * @LastEditors: Wenbo Zhao
- * @LastEditTime: 2018-07-16 18:12:02
+ * @LastEditTime: 2018-07-16 18:07:05
  * @Description: 
  * @Company: JD
  * @Email: zhaowenbo3@jd.com
  * @motto: Always believe that something wonderful is about to happen
  */
 
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Checkbox, Button, Modal } from 'antd';
-import { Div } from '../../../../../common/Div';
-import { Title } from '../../../../../common/Title';
-import { getGoodsList } from '../../../../../../utils/api-service';
-import Lists from './Lists';
+import { List, Checkbox } from 'antd';
+import { Div } from '../../../../../../common/Div';
+import { FLEX_COL_END_START } from '../../../../../../../consts/css';
 
 class GoodsList extends Component {
   static displayName = 'GoodsList';
@@ -27,26 +25,6 @@ class GoodsList extends Component {
       visible: false,
     };
   }
-
-  componentDidMount() {
-    getGoodsList({}).then(response => {
-      this.setState({ data: response.data.result.data });
-      console.log(response);
-    });
-  }
-
-  showModal = () => {
-    this.setState({
-      visible: true,
-    });
-  };
-
-  handleCancel = e => {
-    console.log(e);
-    this.setState({
-      visible: false,
-    });
-  };
 
   render() {
     // const data = [
@@ -105,26 +83,30 @@ class GoodsList extends Component {
     //     sku: '337641',
     //   },
     // ];
-    const { data } = this.state;
+    const { dataLists, haveCheckbox } = this.props;
     return (
-      <Div styleStr={containerStr}>
-        <Lists haveCheckbox={true} dataLists={data} />
-        <Title>
-          <Checkbox>全选</Checkbox>
-          <Button type="primary" style={{ margin: '0  10px' }} onClick={() => this.showModal()}>
-            查看已选商品
-          </Button>
-          <Modal
-            title="已选商品"
-            visible={this.state.visible}
-            onCancel={this.handleCancel}
-            width={1040}
-            footer={null}
-          >
-            <Lists haveCheckbox={false} dataLists={data} />
-          </Modal>
-        </Title>
-      </Div>
+      <Fragment>
+        <List
+          grid={{ gutter: 16, column: 4 }}
+          dataSource={dataLists}
+          pagination={{
+            onChange: page => {
+              console.log(page);
+            },
+            pageSize: 8,
+          }}
+          renderItem={item => (
+            <List.Item>
+              <Div styleStr={`${itemStr};background-image:url(${item.img})`}>
+                <Div styleStr={titleStr}>{item.title}</Div>
+                <Div>{`￥:${item.sku}`}</Div>
+                <Div>{`SKU:${item.sku}`}</Div>
+                <Div styleStr={checkboxItemStr}>{haveCheckbox ? <Checkbox /> : <Fragment />}</Div>
+              </Div>
+            </List.Item>
+          )}
+        />
+      </Fragment>
     );
   }
 }
@@ -137,4 +119,16 @@ function mapStateToProps(state) {
   };
 }
 
-const containerStr = 'margin: 10px 0';
+const itemStr = `${FLEX_COL_END_START}; 
+                width: 200px; 
+                height: 200px;
+                background-repeat: no-repeat;
+                background-size: 100% 100%;
+                position: relative`;
+const titleStr = `overflow: hidden;
+                  text-overflow: ellipsis;
+                  white-space: nowrap;
+                  width: 100%;`;
+const checkboxItemStr = `position: absolute;
+                         top: 10px;
+                         right: 10px;`;

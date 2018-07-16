@@ -2,11 +2,11 @@
  * @Author: Wenbo Zhao
  * @Date: 2018-07-04 17:43:11
  * @LastEditors: Wenbo Zhao
- * @LastEditTime: 2018-07-05 17:00:49
+ * @LastEditTime: 2018-07-16 18:13:42
  * @Description: 创建活动第一步的reducer
  * @Company: JD
  * @Email: zhaowenbo3@jd.com
- * @motto: Javascript will save your soul
+ * @motto: Always believe that something wonderful is about to happen
  */
 import { returnPayload } from '../../utils/reducerHelper';
 import { handleAction } from 'redux-actions';

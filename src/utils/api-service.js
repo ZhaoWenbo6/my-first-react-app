@@ -2,11 +2,11 @@
  * @Author: Wenbo Zhao
  * @Date: 2018-07-02 17:57:16
  * @LastEditors: Wenbo Zhao
- * @LastEditTime: 2018-07-02 17:59:49
+ * @LastEditTime: 2018-07-16 18:13:46
  * @Description: 统一接口函数
  * @Company: JD
  * @Email: zhaowenbo3@jd.com
- * @motto: Javascript will save your soul
+ * @motto: Always believe that something wonderful is about to happen
  */
 import axios from 'axios';
 import * as apiSchema from './api-schema';
@@ -40,4 +40,8 @@ export function getUser() {
 
 export function getClassification(params) {
   return makeService(shareService, apiSchema.classification(params)());
+}
+
+export function getGoodsList(params) {
+  return makeService(shareService, apiSchema.goodsList(params)());
 }
