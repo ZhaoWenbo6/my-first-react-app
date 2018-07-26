@@ -1,8 +1,23 @@
+/*
+ * @Author: Wenbo Zhao
+ * @Date: 2018-07-17 10:44:35
+ * @LastEditors: Wenbo Zhao
+ * @LastEditTime: 2018-07-17 15:30:48
+ * @Description: 
+ * @Company: JD
+ * @Email: zhaowenbo3@jd.com
+ * @motto: Always believe that something wonderful is about to happen
+ */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Div } from '../../../../common/Div';
 import { Input, Upload, Button, Icon, message } from 'antd';
 // import reqwest from 'reqwest';
+import _ from 'lodash';
+import { checkSkuId } from '../../../../../utils/api-service';
+import { RESPONSE_CODE_ZERO } from '../../../../../consts/api';
+import { changeAddGoods } from '../../../../../actions/CreateActivity/addGoods';
+import { WRITE_BIZIDS } from '../../../../../reducer/ActivityManagement/addGoods';
 
 const { TextArea } = Input;
 
@@ -15,6 +30,7 @@ class WriteSKU extends Component {
       fileList: [],
       uploading: false,
     };
+    this.emitChangeDebounced = _.debounce(this.emitChange, 1000);
   }
 
   handleUpload = () => {
@@ -50,6 +66,31 @@ class WriteSKU extends Component {
     });
   };
 
+  handleChange = event => {
+    event.persist();
+    this.emitChangeDebounced(event);
+  };
+
+  emitChange = event => {
+    const { value } = event.target;
+    const { dispatch } = this.props;
+    checkSkuId({ skuIds: value }).then(response => {
+      if (response.status === 200) {
+        const { code, message: responseMessage } = response.data;
+        if (code === RESPONSE_CODE_ZERO) {
+          dispatch(changeAddGoods(WRITE_BIZIDS, value));
+          message.success('输入的skuId均有效');
+        } else {
+          dispatch(changeAddGoods(WRITE_BIZIDS, ''));
+          message.error(responseMessage);
+        }
+      } else {
+        message.error('网络连接失败');
+        dispatch(changeAddGoods(WRITE_BIZIDS, ''));
+      }
+    });
+  };
+
   render() {
     const { uploading } = this.state;
     const props = {
@@ -75,7 +116,11 @@ class WriteSKU extends Component {
 
     return (
       <Div>
-        <TextArea rows={4} placeholder="请输入SKU编号，多个id用英文分割符隔开" />
+        <TextArea
+          rows={4}
+          placeholder="请输入SKU编号，多个id用英文分割符隔开"
+          onChange={event => this.handleChange(event)}
+        />
         <div>
           <Upload {...props}>
             <Button>

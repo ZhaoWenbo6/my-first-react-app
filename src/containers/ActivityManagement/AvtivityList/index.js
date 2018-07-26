@@ -8,13 +8,11 @@
  * @Email: zhaowenbo3@jd.com
  * @motto: Always believe that something wonderful is about to happen
  */
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Button } from 'antd';
-import { BASE_INFO } from '../../../consts/route';
-import { changeCurrentStep } from '../../../actions/CreateActivity';
-import { CURRENT_STEP } from '../../../reducer/ActivityManagement';
 import { changeRouteHistory } from '../../../actions/config';
+import FilterCard from './components/FilterCard';
+import ListInfo from './components/ListInfo';
 
 class AvtivityList extends Component {
   static displayName = 'AvtivityList';
@@ -24,17 +22,12 @@ class AvtivityList extends Component {
     dispatch(changeRouteHistory(history));
   }
 
-  gotoFirstPage = () => {
-    const { history, dispatch } = this.props;
-    dispatch(changeCurrentStep(CURRENT_STEP, 0));
-    history.push(BASE_INFO);
-  };
-
   render() {
     return (
-      <Button type="primary" onClick={() => this.gotoFirstPage()}>
-        新建活动
-      </Button>
+      <Fragment>
+        <FilterCard />
+        <ListInfo />
+      </Fragment>
     );
   }
 }

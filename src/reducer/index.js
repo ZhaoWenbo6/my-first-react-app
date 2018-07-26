@@ -11,9 +11,13 @@
 import user from './user';
 import config from './config';
 import create from './ActivityManagement';
+import activityList from './ActivityList';
+import ActivityDetails from './ActivityDetails';
 
 export default {
   create: create,
   config: config,
   user: user,
+  activityList: activityList,
+  activityDetails: ActivityDetails,
 };

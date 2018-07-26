@@ -73,7 +73,7 @@ class DateRange extends Component {
     return (
       <Div styleStr={contanierDiv}>
         <DatePicker
-          disabledDate={endValue => this.disabledStartDate(endValue)}
+          disabledDate={startValue => this.disabledStartDate(startValue)}
           showTime
           format="YYYY-MM-DD HH:mm:ss"
           value={startValue}
@@ -83,7 +83,7 @@ class DateRange extends Component {
           style={{ width: '280px' }}
         />
         <DatePicker
-          disabledDate={startValue => this.disabledEndDate(startValue)}
+          disabledDate={endValue => this.disabledEndDate(endValue)}
           showTime
           format="YYYY-MM-DD HH:mm:ss"
           value={endValue}

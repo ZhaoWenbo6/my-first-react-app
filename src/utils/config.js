@@ -1,11 +1,13 @@
+import { PREFIX_RUL_DEV, PREFIX_RUL_PRD } from '../consts/api';
+
 export const dev = {
-  shareService: 'http://bjshare.cms.jd.care',
+  shareService: PREFIX_RUL_DEV,
 };
 
 export const beta = {
-  shareService: 'http://bjshare.cms.jd.care',
+  shareService: PREFIX_RUL_DEV,
 };
 
 export const master = {
-  shareService: 'http://bjshare.cms.jd.local',
+  shareService: PREFIX_RUL_PRD,
 };

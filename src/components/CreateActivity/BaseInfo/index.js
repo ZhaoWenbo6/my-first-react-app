@@ -2,7 +2,7 @@
  * @Author: Wenbo Zhao
  * @Date: 2018-07-05 16:30:17
  * @LastEditors: Wenbo Zhao
- * @LastEditTime: 2018-07-05 18:18:23
+ * @LastEditTime: 2018-07-19 16:43:31
  * @Description: 创建活动第一步
  * @Company: JD
  * @Email: zhaowenbo3@jd.com
@@ -17,11 +17,14 @@ import { changeBaseInfo } from '../../../actions/CreateActivity/baseInfo';
 import {
   ACTIVITY_NAME,
   ACTIVITY_TYPE,
-  ACTIVITY_END_TIME,
-  ACTIVITY_START_TIME,
+  END_TIME,
+  START_TIME,
 } from '../../../reducer/ActivityManagement/baseInfo';
-import DateRange from '../../common/DateRange';
-import { FLEX_BETWEEN_CENTER, FLEX_START_CENTER } from '../../../consts/css';
+// import DateRange from '../../common/DateRange';
+import { FLEX_START_CENTER } from '../../../consts/css';
+import { changeAddGoods } from '../../../actions/CreateActivity/addGoods';
+import { MATCH_TYPE } from '../../../reducer/ActivityManagement/addGoods';
+import DateRanges from '../../common/DateRanges';
 
 class BaseInfo extends Component {
   static displayName = 'BaseInfo';
@@ -40,6 +43,7 @@ class BaseInfo extends Component {
     const { value: type } = event.target;
     const { dispatch } = this.props;
     dispatch(changeBaseInfo(ACTIVITY_TYPE, type));
+    dispatch(changeAddGoods(MATCH_TYPE, type === 3 ? 4 : 1));
   };
 
   onChangeSource = e => {
@@ -51,17 +55,23 @@ class BaseInfo extends Component {
 
   changeStartTime = timeStr => {
     const { dispatch } = this.props;
-    dispatch(changeBaseInfo(ACTIVITY_START_TIME, timeStr));
+    dispatch(changeBaseInfo(START_TIME, timeStr));
   };
 
   changeEndTime = timeStr => {
     const { dispatch } = this.props;
-    dispatch(changeBaseInfo(ACTIVITY_END_TIME, timeStr));
+    dispatch(changeBaseInfo(END_TIME, timeStr));
+  };
+
+  changeTime = timeArr => {
+    const { dispatch } = this.props;
+    dispatch(changeBaseInfo(START_TIME, timeArr[0]));
+    dispatch(changeBaseInfo(END_TIME, timeArr[1]));
   };
 
   render() {
     const RadioGroup = Radio.Group;
-    const { activityName, activityType, activitySource } = this.props;
+    const { activityName, activityType, activitySource, startTime, endTime } = this.props;
     const nameLimitStyle = `color: red;margin: 0 30px; visibility:${
       activityName.length > nameLengthLimit ? 'visible' : 'hidden'
     }`;
@@ -81,16 +91,12 @@ class BaseInfo extends Component {
           <Div styleStr={itemsStyles}>活动入口：</Div>
           <RadioGroup onChange={event => this.onChangeType(event)} value={activityType}>
             <Radio value={1}>商详</Radio>
-            <Radio value={2}>通天塔</Radio>
+            <Radio value={3}>通天塔</Radio>
           </RadioGroup>
         </Div>
         <Div styleStr={containerStyles}>
           <Div styleStr={itemsStyles}>活动时间：</Div>
-          <DateRange
-            propsStyles={dateRangeStyles}
-            changeStartTime={timeStr => this.changeStartTime(timeStr)}
-            changeEndtTime={timeStr => this.changeEndTime(timeStr)}
-          />
+          <DateRanges onChange={timeArr => this.changeTime(timeArr)} value={[startTime, endTime]} />
         </Div>
         <Div styleStr={containerStyles}>
           <Div styleStr={itemsStyles}>活动渠道：</Div>
@@ -109,7 +115,8 @@ function mapStateToProps(state) {
   return {
     activityName: _.get(state, 'create.baseInfo.activityName', ''),
     activityType: _.get(state, 'create.baseInfo.activityType', 1),
-    activityTime: _.get(state, 'create.baseInfo.activityTime', []),
+    startTime: _.get(state, 'create.baseInfo.startTime', 0),
+    endTime: _.get(state, 'create.baseInfo.endTime', 0),
     activitySource: _.get(state, 'create.baseInfo.activitySource', 1),
   };
 }
@@ -118,6 +125,6 @@ const nameLengthLimit = 30;
 
 const containerStyles = `${FLEX_START_CENTER} margin: 20px 0;`;
 
-const dateRangeStyles = `${FLEX_BETWEEN_CENTER}`;
+// const dateRangeStyles = `${FLEX_BETWEEN_CENTER}`;
 
 const itemsStyles = 'margin: 0 10px 0 20px;';
