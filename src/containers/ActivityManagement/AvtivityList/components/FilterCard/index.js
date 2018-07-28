@@ -26,6 +26,7 @@ import {
 import {
   changeActivityListValue,
   requestActivityListInfo,
+  resetQueryFilter,
 } from '../../../../../actions/ActivityList';
 import moment from 'moment';
 
@@ -54,12 +55,17 @@ class FilterCard extends Component {
 
   onChangeValue = (value, type) => {
     const { dispatch } = this.props;
-    dispatch(changeActivityListValue(type, value ? value : ''));
+    dispatch(changeActivityListValue(type, value));
   };
 
   queryActivityList = () => {
     const { dispatch } = this.props;
     dispatch(requestActivityListInfo(1, 10));
+  };
+
+  resetQueryFilter = () => {
+    const { dispatch } = this.props;
+    dispatch(resetQueryFilter());
   };
 
   renderFilter = () => {
@@ -165,12 +171,14 @@ class FilterCard extends Component {
         {this.renderFilter()}
         <Div styleStr={FLEX_SPACEAROUND_CENTER}>
           <Div>
-            <Button style={buttonStyle}>重置</Button>
+            <Button style={buttonStyle} onClick={() => this.resetQueryFilter()}>
+              重置
+            </Button>
             <Button style={buttonStyle} type="primary" onClick={() => this.queryActivityList()}>
               查询
             </Button>
           </Div>
-          <Div>
+          <Div styleStr={'display: none'}>
             <Button style={buttonStyle} type="primary">
               按天查询总数据
             </Button>

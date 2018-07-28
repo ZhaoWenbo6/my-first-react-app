@@ -1,12 +1,33 @@
 import { createPayloadAction } from '../../utils/actionHelper';
 import _ from 'lodash';
 import { getActivityList } from '../../utils/api-service';
-import { SHARE_ACTIVITY_LINT } from '../../reducer/ActivityList';
+import {
+  SHARE_ACTIVITY_LINT,
+  ACTIVITY_NAME,
+  ACTIVITY_ID,
+  ACTIVITY_TYPE,
+  ACTIVITY_STATE,
+  ACTIVITY_START_TIME,
+  ACTIVITY_END_TIME,
+  ACTIVITY_CREATER,
+} from '../../reducer/ActivityList';
 
 export function changeActivityListValue(type, payload) {
   return (dispatch, getState) => {
     console.log(getState());
     dispatch(createPayloadAction(type, payload));
+  };
+}
+
+export function resetQueryFilter() {
+  return dispatch => {
+    dispatch(createPayloadAction(ACTIVITY_NAME, ''));
+    dispatch(createPayloadAction(ACTIVITY_ID, ''));
+    dispatch(createPayloadAction(ACTIVITY_TYPE, -1));
+    dispatch(createPayloadAction(ACTIVITY_STATE, -1));
+    dispatch(createPayloadAction(ACTIVITY_START_TIME, 0));
+    dispatch(createPayloadAction(ACTIVITY_END_TIME, 0));
+    dispatch(createPayloadAction(ACTIVITY_CREATER, ''));
   };
 }
 

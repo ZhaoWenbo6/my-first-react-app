@@ -16,7 +16,7 @@ import { Div } from '../../../../common/Div';
 import { FLEX_START_CENTER, FLEX_CENTER_CENTER } from '../../../../../consts/css';
 import GoodsList from './GoodsList';
 import GoodsName from './GoodsName';
-import { requestGoodsList } from '../../../../../actions/CreateActivity/addGoods';
+import { requestGoodsList, resetQueryFilter } from '../../../../../actions/CreateActivity/addGoods';
 import {
   STRING_ZERO,
   STRING_EMPTY,
@@ -40,6 +40,10 @@ class SelectSKU extends Component {
     dispatch(requestGoodsList(GOODS_LIST_OBJECT, params));
   };
 
+  resetQueryFilter = () => {
+    const { dispatch } = this.props;
+    dispatch(resetQueryFilter());
+  };
   render() {
     const {
       firstClassification,
@@ -77,7 +81,7 @@ class SelectSKU extends Component {
             >
               搜索
             </Button>
-            <Button type="primary" style={{ margin: '10px' }}>
+            <Button style={{ margin: '10px' }} onClick={() => this.resetQueryFilter(params)}>
               重置
             </Button>
           </Div>

@@ -15,7 +15,23 @@ export function checkFirstData(stateObj) {
   const boolActivityStartTime = startTime !== 0;
   const boolActivityEndTime = endTime !== 0;
   isDisable = boolActivityName && boolActivityStartTime && boolActivityEndTime;
-  console.log(stateObj);
+  return isDisable;
+}
+
+export function checkSecondData(stateObj) {
+  let isDisable = false;
+  const {
+    selectedType,
+    selectedGoodsList: { data = [] },
+    skuFile,
+    writeBizids,
+    isResponse,
+  } = stateObj;
+  if (selectedType) {
+    isDisable = skuFile.length > 0 || (isResponse && writeBizids.length > 0);
+  } else {
+    isDisable = data.length > 0;
+  }
   return isDisable;
 }
 
@@ -42,6 +58,7 @@ export function splicCreateActivityParameters() {
           }
           params = JSON.stringify({
             ...firstParams,
+            matchType: matchType,
             bizIds: data.map(item => item.sku).join(','),
             ...thirdParams,
           });

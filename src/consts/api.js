@@ -25,6 +25,8 @@ export const API_DEFAULT = '/mock/5b320f940a29144fd436edf9';
 
 export const API_USER_INFO = `${API_DEFAULT}/getUserInfo`;
 
+export const GET_USER_INFO = '/usersInfo.do';
+
 export const CREATE_PREFIXES = '/selfProduce'; //创建活动部分
 export const CLASSIFICATION = `${CREATE_PREFIXES}/selectByParentCode.do`; //商品分类
 export const GOODSLIST = `${CREATE_PREFIXES}/queryList.do`; //商品列表

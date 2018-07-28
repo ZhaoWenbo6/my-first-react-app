@@ -9,7 +9,6 @@
  * @motto: Always believe that something wonderful is about to happen
  */
 import {
-  API_USER_INFO,
   CLASSIFICATION,
   GOODSLIST,
   CHECK_SKU,
@@ -21,12 +20,13 @@ import {
   CLOSE_ACTIVITY,
   ACTIVITY_DETAILS,
   UPDATE_CHECK_FLOW,
+  GET_USER_INFO,
 } from '../consts/api';
 
 export function user() {
   return () => ({
     method: 'get',
-    path: API_USER_INFO,
+    path: GET_USER_INFO,
   });
 }
 

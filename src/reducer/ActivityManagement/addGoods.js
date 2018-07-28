@@ -48,6 +48,12 @@ const selectedType = handleAction(SELECTED_TYPE, returnPayload, 0);
 export const WRITE_BIZIDS = 'WRITE_BIZIDS';
 const writeBizids = handleAction(WRITE_BIZIDS, returnPayload, '');
 
+export const IS_RESPONSE = 'IS_RESPONSE';
+const isResponse = handleAction(IS_RESPONSE, returnPayload, false);
+
+export const SKU_FILE = 'SKU_FILE';
+const skuFile = handleAction(SKU_FILE, returnPayload, []);
+
 export default combineReducers({
   matchType,
   goodsListObject,
@@ -61,4 +67,6 @@ export default combineReducers({
   thirdClassification,
   selectedType,
   writeBizids,
+  skuFile,
+  isResponse,
 });

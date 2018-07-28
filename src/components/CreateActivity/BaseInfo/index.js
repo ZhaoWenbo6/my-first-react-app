@@ -91,7 +91,9 @@ class BaseInfo extends Component {
           <Div styleStr={itemsStyles}>活动入口：</Div>
           <RadioGroup onChange={event => this.onChangeType(event)} value={activityType}>
             <Radio value={1}>商详</Radio>
-            <Radio value={3}>通天塔</Radio>
+            <Radio value={3} disabled>
+              通天塔
+            </Radio>
           </RadioGroup>
         </Div>
         <Div styleStr={containerStyles}>

@@ -71,7 +71,7 @@ class ActivityDetails extends Component {
     return (
       <Spin spinning={spinning}>
         <Title>1.活动基本信息</Title>
-        <BaseInfo dataObj={activityDetails} isDetails={true} />
+        <BaseInfo data={activityDetails} isDetails={true} />
         <Title>2.业务编号</Title>
         <a onClick={() => this.exportData(activityDetails.id, activityDetails.activityType)}>
           点击下载

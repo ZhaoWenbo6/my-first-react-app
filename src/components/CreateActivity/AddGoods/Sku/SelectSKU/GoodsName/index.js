@@ -42,12 +42,12 @@ class SelectFilter extends Component {
       <Fragment>
         <Input
           style={{ width: '400px' }}
-          placeholder="请输入活动名称... 30字以内"
+          placeholder="请输入商品名称... 30字以内"
           onChange={event => this.onChangeName(event)}
           value={goodsName}
-          maxLength={18}
+          maxLength={30}
         />
-        <Div styleStr={nameLimitStyle}>18字以内</Div>
+        <Div styleStr={nameLimitStyle}>30字以内</Div>
       </Fragment>
     );
   }
@@ -61,4 +61,4 @@ function mapStateToProps(state) {
   };
 }
 
-const nameLengthLimit = 17;
+const nameLengthLimit = 29;

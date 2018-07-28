@@ -2,11 +2,27 @@ import { createPayloadAction } from '../../utils/actionHelper';
 import { getGoodsList, getClassification } from '../../utils/api-service';
 import { intersectionArr } from '../../utils/array';
 import _ from 'lodash';
+import {
+  GOODS_NAME,
+  FIRST_CLASSIFICATION,
+  SECOND_CLASSIFICATION,
+  THIRD_CLASSIFICATION,
+} from '../../reducer/ActivityManagement/addGoods';
 
 export function changeAddGoods(type, payload) {
   return (dispatch, getState) => {
     console.log(getState());
     dispatch(createPayloadAction(type, payload));
+  };
+}
+
+export function resetQueryFilter() {
+  return (dispatch, getState) => {
+    console.log(getState());
+    dispatch(createPayloadAction(GOODS_NAME, ''));
+    dispatch(changeAddGoods(FIRST_CLASSIFICATION, '0')); //设置一级分类
+    dispatch(changeAddGoods(SECOND_CLASSIFICATION, '0')); //恢复默认值
+    dispatch(changeAddGoods(THIRD_CLASSIFICATION, '0')); //恢复默认值
   };
 }
 
