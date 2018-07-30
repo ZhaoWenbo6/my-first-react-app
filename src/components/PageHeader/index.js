@@ -12,6 +12,7 @@ class PageHeader extends Component {
   static displayName = 'PageHeader';
 
   logout = () => {
+    document.cookie = 'sso.jd.com=';
     window.open(LOGOUT_PAGE, '_self');
   };
 

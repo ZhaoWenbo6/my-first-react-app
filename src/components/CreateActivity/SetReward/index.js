@@ -33,7 +33,16 @@ class SetReward extends Component {
   };
 
   render() {
-    const { sharerRewardInfo, recipientRewardInfo } = this.props;
+    const {
+      rewardInfo: {
+        sharerRewardInfo,
+        recipientRewardInfo,
+        shareRewardLimit,
+        shareRewardLimitDay,
+        viewRewardLimit,
+        viewRewardLimitDay,
+      },
+    } = this.props;
     return (
       <Div>
         <SharerInfo rewardPerson={0} sharerRewardInfo={sharerRewardInfo} disabled={false} />
@@ -42,7 +51,13 @@ class SetReward extends Component {
           recipientRewardInfo={recipientRewardInfo}
           disabled={false}
         />
-        <RewardLimit disabled={false} />
+        <RewardLimit
+          disabled={false}
+          shareRewardLimit={shareRewardLimit}
+          shareRewardLimitDay={shareRewardLimitDay}
+          viewRewardLimit={viewRewardLimit}
+          viewRewardLimitDay={viewRewardLimitDay}
+        />
       </Div>
     );
   }
@@ -52,7 +67,6 @@ export default connect(mapStateToProps)(SetReward);
 
 function mapStateToProps(state) {
   return {
-    sharerRewardInfo: _.get(state, 'create.rewardInfo.sharerRewardInfo'),
-    recipientRewardInfo: _.get(state, 'create.rewardInfo.recipientRewardInfo'),
+    rewardInfo: _.get(state, 'create.rewardInfo'),
   };
 }

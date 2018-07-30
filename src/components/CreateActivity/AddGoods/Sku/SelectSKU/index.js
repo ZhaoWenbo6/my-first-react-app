@@ -44,6 +44,7 @@ class SelectSKU extends Component {
     const { dispatch } = this.props;
     dispatch(resetQueryFilter());
   };
+
   render() {
     const {
       firstClassification,
@@ -61,8 +62,8 @@ class SelectSKU extends Component {
       saler: null,
       pageNo: INT_ONE,
       pageSize: INT_EIGHT,
-      startTime: startTime,
-      endTime: endTime,
+      startDate: startTime,
+      endDate: endTime,
     };
     return (
       <Fragment>
@@ -81,7 +82,7 @@ class SelectSKU extends Component {
             >
               搜索
             </Button>
-            <Button style={{ margin: '10px' }} onClick={() => this.resetQueryFilter(params)}>
+            <Button style={{ margin: '10px' }} onClick={() => this.resetQueryFilter()}>
               重置
             </Button>
           </Div>

@@ -11,13 +11,20 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Checkbox, Button, Modal } from 'antd';
+import { Checkbox, Button, Modal, List, Tooltip } from 'antd';
 import { Div } from '../../../../../common/Div';
 import { Title } from '../../../../../common/Title';
 import Lists from './Lists';
-import { requestGoodsList } from '../../../../../../actions/CreateActivity/addGoods';
-import { GOODS_LIST_OBJECT } from '../../../../../../reducer/ActivityManagement/addGoods';
+import {
+  requestGoodsList,
+  changeAddGoods,
+} from '../../../../../../actions/CreateActivity/addGoods';
+import {
+  GOODS_LIST_OBJECT,
+  SELECTED_GOODS_LIST,
+} from '../../../../../../reducer/ActivityManagement/addGoods';
 import _ from 'lodash';
+import { FLEX_COL_END_START } from '../../../../../../consts/css';
 
 class GoodsList extends Component {
   static displayName = 'GoodsList';
@@ -30,15 +37,8 @@ class GoodsList extends Component {
   }
 
   componentDidMount() {
-    const { dispatch, startTime, endTime } = this.props;
-    dispatch(
-      requestGoodsList(GOODS_LIST_OBJECT, {
-        startDate: startTime,
-        endDate: endTime,
-        pageNo: 1,
-        pageSize: 8,
-      })
-    );
+    const { dispatch, filterParams } = this.props;
+    dispatch(requestGoodsList(GOODS_LIST_OBJECT, filterParams));
   }
 
   showModal = () => {
@@ -54,13 +54,61 @@ class GoodsList extends Component {
     });
   };
 
+  selectAll = event => {
+    const {
+      target: { checked },
+    } = event;
+    const {
+      dispatch,
+      selectedGoodsList: { data: selectedData = [] },
+      goodsListObject,
+    } = this.props;
+    const resultList = selectedData;
+    const { data: goodsListData = [] } = goodsListObject;
+    const goodsList = goodsListData;
+    let goodsResultList = [];
+    if (checked) {
+      goodsResultList = goodsList.map(beforeItem => {
+        if (!beforeItem.isChecked) {
+          beforeItem.isChecked = true;
+          resultList.push({ ...beforeItem });
+        }
+        return beforeItem;
+      });
+    } else {
+      goodsResultList = goodsList.map(beforeItem => {
+        if (beforeItem.isChecked) {
+          const index = resultList.indexOf(beforeItem);
+          resultList.splice(index, 1);
+          beforeItem.isChecked = false;
+          return beforeItem;
+        }
+      });
+    }
+    dispatch(changeAddGoods(GOODS_LIST_OBJECT, { ...goodsListObject, data: goodsResultList }));
+    dispatch(changeAddGoods(SELECTED_GOODS_LIST, { data: resultList }));
+  };
+
+  isChecked = () => {
+    const {
+      goodsListObject: { data },
+    } = this.props;
+    if (data) {
+      return !(data.filter(item => item.isChecked === false).length > 0);
+    } else {
+      return false;
+    }
+  };
+
   render() {
     const { goodsListObject, selectedGoodsList, filterParams } = this.props;
     return (
       <Div styleStr={containerStr}>
         <Lists data={goodsListObject} filterParams={filterParams} />
         <Title>
-          <Checkbox>全选</Checkbox>
+          <Checkbox checked={this.isChecked()} onChange={event => this.selectAll(event)}>
+            全选
+          </Checkbox>
           <Button type="primary" style={{ margin: '0  10px' }} onClick={() => this.showModal()}>
             查看已选商品
           </Button>
@@ -71,7 +119,29 @@ class GoodsList extends Component {
             width={1040}
             footer={null}
           >
-            <Lists data={selectedGoodsList} />
+            <List
+              grid={{ gutter: 16, column: 4 }}
+              dataSource={selectedGoodsList.data}
+              renderItem={item => (
+                <List.Item>
+                  <Div styleStr={`${itemStr};background-image:url(${item.img})`}>
+                    <Div styleStr={titleStr}>
+                      <Tooltip placement="topLeft" title={item.title}>
+                        {item.title}
+                      </Tooltip>
+                    </Div>
+                    <Div styleStr={'display: none'}>{`￥:${item.sku}`}</Div>
+                    <Div>{`SKU:${item.sku}`}</Div>
+                    <Div styleStr={checkboxItemStr}>
+                      <Checkbox
+                        checked={item.isChecked}
+                        onChange={event => this.selectGoods(event, item)}
+                      />
+                    </Div>
+                  </Div>
+                </List.Item>
+              )}
+            />
           </Modal>
         </Title>
       </Div>
@@ -91,3 +161,17 @@ function mapStateToProps(state) {
 }
 
 const containerStr = 'margin: 10px 0';
+
+const itemStr = `${FLEX_COL_END_START}; 
+                width: 200px; 
+                height: 200px;
+                background-repeat: no-repeat;
+                background-size: 100% 100%;
+                position: relative`;
+const titleStr = `overflow: hidden;
+                  text-overflow: ellipsis;
+                  white-space: nowrap;
+                  width: 100%;`;
+const checkboxItemStr = `position: absolute;
+                         top: 10px;
+                         right: 10px;`;

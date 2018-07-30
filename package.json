@@ -11,6 +11,8 @@
     "buildPrd": "cross-env DEPLOY_ENV=master node scripts/build.js",
     "precommit": "lint-staged",
     "start": "cross-env DEPLOY_ENV=dev node scripts/start.js",
+    "startBeta": "cross-env --mode dev node scripts/start.js",
+    "startPrd": "cross-env --mode prd node scripts/start.js",
     "test": "node scripts/test.js --env=jsdom"
   },
    "lint-staged": {

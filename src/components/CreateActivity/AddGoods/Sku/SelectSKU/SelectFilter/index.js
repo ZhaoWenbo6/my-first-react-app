@@ -11,7 +11,7 @@
 
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Select } from 'antd';
+import { Select, Tooltip } from 'antd';
 import { Div } from '../../../../../common/Div';
 import { MARGIN_RIGHT_TEN } from '../../../../../../consts/css';
 import {
@@ -75,14 +75,26 @@ class SelectFilter extends Component {
       secondClassification,
       thirdClassification,
     } = this.props;
-    const firstSelectDom = goodsFirstClassification.map(item => (
-      <Option key={item.code}>{item.name}</Option>
+    const firstSelectDom = goodsFirstClassification.map((item, index) => (
+      <Option key={item.code + index}>
+        <Tooltip placement="left" title={item.name}>
+          {item.name}
+        </Tooltip>
+      </Option>
     ));
-    const secondSelectDom = goodsSecondClassification.map(item => (
-      <Option key={item.code}>{item.name}</Option>
+    const secondSelectDom = goodsSecondClassification.map((item, index) => (
+      <Option key={item.code + index}>
+        <Tooltip placement="left" title={item.name}>
+          {item.name}
+        </Tooltip>
+      </Option>
     ));
-    const thirdSelectDom = goodsThirdClassification.map(item => (
-      <Option key={item.code}>{item.name}</Option>
+    const thirdSelectDom = goodsThirdClassification.map((item, index) => (
+      <Option key={item.code + index}>
+        <Tooltip placement="left" title={item.name}>
+          {item.name}
+        </Tooltip>
+      </Option>
     ));
     return (
       <Fragment>

@@ -29,60 +29,70 @@ class GoodsCodes extends Component {
     );
   };
 
-  render() {
+  renderContent = () => {
     const {
-      data: { matchType, selectedType, selectedGoodsList },
+      data: { matchType, selectedType, selectedGoodsList, skuFile },
       skusInfo,
     } = this.props;
     const bizIdsArr =
-      matchType === 1 ? (selectedType === 0 ? selectedGoodsList.data : [1, 2]) : [2, 3, 4];
-
-    return (
-      <Fragment>
-        <div
-          className="showNum"
-          style={{ display: `${bizIdsArr.length <= 20 ? 'flex' : 'none'}`, flexWrap: 'wrap' }}
-        >
-          <Card title={`已选商品：共${bizIdsArr.length}个`}>
-            {bizIdsArr.map((item, key) => {
-              if (skusInfo && skusInfo.length > 0) {
-                const skuContent = this.renderSKUSInfo(key);
-                return (
-                  <Popover
-                    content={skuContent}
-                    title="包含的sku"
-                    placement="topLeft"
-                    trigger="hover"
-                    arrowPointAtCenter
-                  >
-                    {item}
-                  </Popover>
-                );
-              } else {
-                return (
-                  <Card.Grid style={gridStyle} key={key}>
-                    {item.sku}
-                  </Card.Grid>
-                );
-              }
-            })}
+      matchType === 1 ? (selectedType === 0 ? selectedGoodsList.data : []) : [2, 3, 4];
+    if (selectedType) {
+      return (
+        <Fragment>
+          <Card title={'已选文件'}>
+            <div>{skuFile[0].name}</div>
           </Card>
-        </div>
-        <Div styleStr={`display: ${bizIdsArr.length > 20 ? 'block' : 'none'}`}>
-          <a
-            href={this.state.contentURL ? this.state.contentURL : 'javascript:;'}
-            download="商品文件.txt"
-            onClick={
-              bizIdsArr.length > 20
-                ? () => this.createTxtFile(bizIdsArr.map(item => item.sku))
-                : null
-            }
-          >
-            点击下载
-          </a>
-        </Div>
-      </Fragment>
-    );
+        </Fragment>
+      );
+    } else {
+      return (
+        <Fragment>
+          <div style={{ display: `${bizIdsArr.length <= 20 ? 'flex' : 'none'}`, flexWrap: 'wrap' }}>
+            <Card title={`已选商品：共${bizIdsArr.length}个`}>
+              {bizIdsArr.map((item, key) => {
+                if (skusInfo && skusInfo.length > 0) {
+                  const skuContent = this.renderSKUSInfo(key);
+                  return (
+                    <Popover
+                      content={skuContent}
+                      title="包含的sku"
+                      placement="topLeft"
+                      trigger="hover"
+                      arrowPointAtCenter
+                    >
+                      {item}
+                    </Popover>
+                  );
+                } else {
+                  return (
+                    <Card.Grid style={gridStyle} key={key}>
+                      {item.sku}
+                    </Card.Grid>
+                  );
+                }
+              })}
+            </Card>
+          </div>
+          <Div styleStr={`display: ${bizIdsArr.length > 20 ? 'block' : 'none'}`}>
+            <a
+              href={this.state.contentURL ? this.state.contentURL : 'javascript:;'}
+              download="商品文件.txt"
+              onClick={
+                bizIdsArr.length > 20
+                  ? () => this.createTxtFile(bizIdsArr.map(item => item.sku))
+                  : null
+              }
+            >
+              点击下载
+            </a>
+          </Div>
+        </Fragment>
+      );
+    }
+  };
+
+  render() {
+    return <Fragment>{this.renderContent()}</Fragment>;
   }
 }
 export default GoodsCodes;

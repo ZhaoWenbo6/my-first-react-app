@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Radio } from 'antd';
+import { Radio, Row } from 'antd';
 import { Div } from '../../../common/Div';
 import SelectSKU from './SelectSKU';
 import WriteSKU from './WriteSKU';
@@ -11,6 +11,7 @@ import {
   SELECTED_TYPE,
   SELECTED_GOODS_LIST,
   WRITE_BIZIDS,
+  SKU_FILE,
 } from '../../../../reducer/ActivityManagement/addGoods';
 
 const RadioButton = Radio.Button;
@@ -30,9 +31,10 @@ class Sku extends Component {
       target: { value },
     } = event;
     if (value === 1) {
-      dispatch(changeAddGoods(SELECTED_GOODS_LIST, { data: {} }));
+      dispatch(changeAddGoods(SELECTED_GOODS_LIST, { data: [] }));
     } else {
       dispatch(changeAddGoods(WRITE_BIZIDS, ''));
+      dispatch(changeAddGoods(SKU_FILE, []));
     }
     dispatch(changeAddGoods(SELECTED_TYPE, parseInt(value, 10)));
   };
@@ -41,6 +43,9 @@ class Sku extends Component {
     const { selectedType } = this.props;
     return (
       <Div>
+        <Row span={8} style={{ color: 'red', alignItems: 'center', margin: '15px' }}>
+          温馨提示：如商品正在秒杀、拼购等促销活动投放期，则该商品无法投放分享
+        </Row>
         <RadioGroup onChange={event => this.onChange(event)} value={selectedType}>
           <RadioButton value={0}>选择商品</RadioButton>
           <RadioButton value={1}>按sku填写</RadioButton>

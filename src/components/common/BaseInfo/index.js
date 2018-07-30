@@ -51,8 +51,13 @@ class BaseInfo extends Component {
 
   render() {
     const {
-      data: { activityName, type, startTime, endTime, source },
+      data: { activityName, activityType, startTime, endTime },
+      data,
     } = this.props;
+    let {
+      data: { activitySource },
+    } = this.props;
+    activitySource = activitySource ? activitySource : data.source;
     return (
       <Fragment>
         <Row style={{ margin: '0 10px 10px' }}>
@@ -65,7 +70,9 @@ class BaseInfo extends Component {
           <Col span={3}>
             <Div styleStr={itemsStyles}>活动入口：</Div>
           </Col>
-          <Col span={10}>{type === 1 ? '商详' : type === 2 ? '店铺' : '通天塔'}</Col>
+          <Col span={10}>
+            {activityType === 1 ? '商详' : activityType === 2 ? '店铺' : '通天塔'}
+          </Col>
         </Row>
         <Row style={{ margin: '0 10px 10px' }}>
           <Col span={3}>
@@ -81,7 +88,7 @@ class BaseInfo extends Component {
           <Col span={3}>
             <Div styleStr={itemsStyles}>活动渠道：</Div>
           </Col>
-          <Col span={10}>{source === 1 ? 'APP' : '微信'}</Col>
+          <Col span={10}>{activitySource === 1 ? 'APP' : '微信'}</Col>
         </Row>
         {this.renderDetails()}
       </Fragment>

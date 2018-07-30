@@ -1,21 +1,24 @@
+import _ from 'lodash';
+
 export const intersection = (a, b) => a.filter(v => b.includes(v));
 export const difference = (a, b) => a.concat(b).filter(v => !a.includes(v) || !b.includes(v));
 
 export function intersectionArr(a, b) {
   const markArr = [];
-  const unmarkArr = [];
+  const unMarkArr = [];
   a.forEach(aItem => {
-    if (b.lenght > 0) {
-      b.forEach(bItem => {
+    if (b.length > 0) {
+      b.map(bItem => {
         if (bItem.sku === aItem.sku) {
-          markArr.push(bItem);
+          aItem.isChecked = true;
+          markArr.push(aItem);
         } else {
-          unmarkArr.push(aItem);
+          unMarkArr.push(aItem);
         }
       });
     } else {
-      unmarkArr.push(aItem);
+      unMarkArr.push(aItem);
     }
   });
-  return [markArr, unmarkArr];
+  return [_.uniq(markArr), _.uniq(unMarkArr)];
 }

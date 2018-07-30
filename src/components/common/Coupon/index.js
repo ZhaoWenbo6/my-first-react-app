@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { InputNumber, Card, message } from 'antd';
+import { InputNumber, Card, message, Input, Tooltip } from 'antd';
 import { Div } from '../Div';
 import { FLEX_START_CENTER } from '../../../consts/css';
 import { updateRewardInfo } from '../../../actions/CreateActivity/rewardInfo';
@@ -15,9 +15,25 @@ class Coupon extends Component {
 
   constructor(props) {
     super(props);
+    this.emitChangeDebounced = _.debounce(this.emitChange, 1000);
   }
 
-  updateValue = (value, keyName) => {
+  handleChange = event => {
+    const { dispatch, rewardPerson, domIndex, itemInfo } = this.props;
+    event.persist();
+    const { value } = event.target;
+    dispatch(
+      updateRewardInfo({
+        rewardPerson: rewardPerson,
+        domIndex: domIndex,
+        updateList: { ...itemInfo, [COUPON_ID]: value, couponName: '', couponNum: 0 },
+        option: 'update',
+      })
+    );
+    this.emitChangeDebounced(event);
+  };
+
+  emitChange = event => {
     const {
       dispatch,
       rewardPerson,
@@ -26,7 +42,10 @@ class Coupon extends Component {
       activityStartTime,
       activityEndTime,
     } = this.props;
-    if (keyName === COUPON_ID && value !== 0) {
+    const {
+      target: { value },
+    } = event;
+    if (value !== '') {
       checkCoupon({
         activityKey: value,
         activityStartTime: activityStartTime,
@@ -34,44 +53,56 @@ class Coupon extends Component {
       }).then(response => {
         const {
           data: { code, message: responseMessage },
+          status,
         } = response;
         console.log(response);
-        if (code === RESPONSE_CODE_ZERO) {
-          const {
-            data: {
-              result: { name, num },
-            },
-          } = response;
-          dispatch(
-            updateRewardInfo({
-              rewardPerson: rewardPerson,
-              domIndex: domIndex,
-              updateList: { ...itemInfo, [keyName]: value, couponName: name, couponNum: num },
-              option: 'update',
-            })
-          );
+        if (status === 200) {
+          if (code === RESPONSE_CODE_ZERO) {
+            const {
+              data: {
+                result: { name, num },
+              },
+            } = response;
+            dispatch(
+              updateRewardInfo({
+                rewardPerson: rewardPerson,
+                domIndex: domIndex,
+                updateList: { ...itemInfo, [COUPON_ID]: value, couponName: name, couponNum: num },
+                option: 'update',
+              })
+            );
+          } else {
+            dispatch(
+              updateRewardInfo({
+                rewardPerson: rewardPerson,
+                domIndex: domIndex,
+                updateList: {
+                  ...itemInfo,
+                  [COUPON_ID]: '',
+                  couponName: responseMessage,
+                  couponNum: 0,
+                },
+                option: 'update',
+              })
+            );
+          }
         } else {
-          dispatch(
-            updateRewardInfo({
-              rewardPerson: rewardPerson,
-              domIndex: domIndex,
-              updateList: { ...itemInfo, [keyName]: 0, couponName: '', couponNum: 0 },
-              option: 'update',
-            })
-          );
-          message.error(responseMessage);
+          message.error(`请求异常：状态码为${status}`);
         }
       });
-    } else {
-      dispatch(
-        updateRewardInfo({
-          rewardPerson: rewardPerson,
-          domIndex: domIndex,
-          updateList: { ...itemInfo, [keyName]: value, couponName: '', couponNum: 0 },
-          option: 'update',
-        })
-      );
     }
+  };
+
+  updateValue = (value, keyName) => {
+    const { dispatch, rewardPerson, domIndex, itemInfo } = this.props;
+    dispatch(
+      updateRewardInfo({
+        rewardPerson: rewardPerson,
+        domIndex: domIndex,
+        updateList: { ...itemInfo, [keyName]: value, couponName: '', couponNum: 0 },
+        option: 'update',
+      })
+    );
   };
 
   render() {
@@ -87,19 +118,20 @@ class Coupon extends Component {
       <Card style={{ width: 750 }}>
         <Div styleStr={`${FLEX_START_CENTER}; margin: 0 10px 10px`}>
           <Div styleStr={'margin: 10px'}>优惠券批次ID：</Div>
-          <InputNumber
-            min={0}
+          <Input
             value={couponId}
             placeholder="请输入优惠券ID"
             style={{ width: '200px' }}
-            onChange={_.debounce(value => this.updateValue(value, COUPON_ID), 1000)}
+            onChange={event => this.handleChange(event)}
             disabled={disabled}
           />
           {couponName === '' ? (
             <Fragment />
           ) : (
-            <Div styleStr={`margin: 0 30px;${SINGLE_LINE_OMITTED}; width: 280px;`}>
-              {couponName}
+            <Div styleStr={`color: red; margin: 0 30px;${SINGLE_LINE_OMITTED}; width: 280px;`}>
+              <Tooltip placement="topLeft" title={couponName}>
+                {couponName}
+              </Tooltip>
             </Div>
           )}
         </Div>
@@ -113,7 +145,11 @@ class Coupon extends Component {
             onChange={value => this.updateValue(value, PRIZE_QUOTA_DAY)}
             disabled={disabled}
           />
-          <Div styleStr={nameLimitStyle}>每天发放数量要大于等于总发放量且不能等于0</Div>
+          <Div styleStr={nameLimitStyle}>
+            <Tooltip placement="topLeft" title={couponName}>
+              每天发放数量要大于等于总发放量且不能等于0
+            </Tooltip>
+          </Div>
         </Div>
         <Div styleStr={`${FLEX_START_CENTER}; margin: 0 10px 10px`}>
           <Div styleStr={'margin: 10px'}>总发放券数量：</Div>
@@ -125,7 +161,11 @@ class Coupon extends Component {
             onChange={value => this.updateValue(value, PRIZE_QUOTA)}
             disabled={disabled}
           />
-          <Div styleStr={nameLimitStyle}>每天发放数量要小于等于总发放量且不能等于0</Div>
+          <Div styleStr={nameLimitStyle}>
+            <Tooltip placement="topLeft" title={couponName}>
+              每天发放数量要小于等于总发放量且不能等于0
+            </Tooltip>
+          </Div>
         </Div>
       </Card>
     );

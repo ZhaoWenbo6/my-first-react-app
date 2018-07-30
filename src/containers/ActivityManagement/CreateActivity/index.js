@@ -10,7 +10,7 @@
  */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Steps, Button, message } from 'antd';
+import { Steps, Button } from 'antd';
 import { Div } from '../../../components/common/Div';
 import { Title } from '../../../components/common/Title';
 import _ from 'lodash';
@@ -20,6 +20,7 @@ import {
   checkFirstData,
   splicCreateActivityParameters,
   checkSecondData,
+  // checkThirdData,
 } from '../../../actions/CreateActivity';
 import { FLEX_CENTER_CENTER } from '../../../consts/css';
 import { BASE_INFO, ADD_GOODS, SET_REWARDS, ACTIVITY_PREVIEW } from '../../../consts/route';
@@ -50,7 +51,6 @@ class CreateActivity extends Component {
   onClickHandle = () => {
     const { dispatch } = this.props;
     dispatch(splicCreateActivityParameters());
-    message.success('活动创建成功');
   };
 
   checkButtonStatus = () => {
@@ -64,6 +64,7 @@ class CreateActivity extends Component {
         isDisable = checkSecondData(addGoods);
         break;
       case 2:
+        // isDisable = checkThirdData(rewardInfo);
         break;
       default:
         break;

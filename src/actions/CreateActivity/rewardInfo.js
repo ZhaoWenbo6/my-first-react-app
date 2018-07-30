@@ -3,13 +3,30 @@ import _ from 'lodash';
 import {
   SHARER_REWARDINFO,
   RECIPIENT_REWARDINFO,
+  SHARE_REWARD_LIMIT,
+  SHARE_REWARD_LIMIT_DAY,
+  VIEW_REWARD_LIMIT,
+  VIEW_REWARD_LIMIT_DAY,
 } from '../../reducer/ActivityManagement/rewardInfo';
 import { REWARD_PERSON_SHARER, INT_ZERO, OBJECT_EMPTY } from '../../consts/const';
+import { MODULE_COUPON } from '../../consts/module';
 
 export function changeRewardInfo(type, payload) {
   return (dispatch, getState) => {
     console.log(getState());
     dispatch(createPayloadAction(type, payload));
+  };
+}
+
+export function resetRewardInfo() {
+  return (dispatch, getState) => {
+    console.log(getState());
+    dispatch(createPayloadAction(SHARER_REWARDINFO, [MODULE_COUPON]));
+    dispatch(createPayloadAction(RECIPIENT_REWARDINFO, []));
+    dispatch(createPayloadAction(SHARE_REWARD_LIMIT, 0));
+    dispatch(createPayloadAction(SHARE_REWARD_LIMIT_DAY, 0));
+    dispatch(createPayloadAction(VIEW_REWARD_LIMIT, 0));
+    dispatch(createPayloadAction(VIEW_REWARD_LIMIT_DAY, 0));
   };
 }
 

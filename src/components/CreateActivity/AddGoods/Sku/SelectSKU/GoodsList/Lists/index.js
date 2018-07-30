@@ -11,7 +11,7 @@
 
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { List, Checkbox } from 'antd';
+import { List, Checkbox, Tooltip } from 'antd';
 import { Div } from '../../../../../../common/Div';
 import { FLEX_COL_END_START } from '../../../../../../../consts/css';
 import {
@@ -55,7 +55,7 @@ class GoodsList extends Component {
         }
         return beforeItem;
       });
-      resultList.push({ ...item, isChecked: true });
+      resultList.push({ ...item });
     } else {
       goodsResultList = goodsList.map(beforeItem => {
         if (beforeItem.sku === item.sku) {
@@ -99,8 +99,12 @@ class GoodsList extends Component {
           renderItem={item => (
             <List.Item>
               <Div styleStr={`${itemStr};background-image:url(${item.img})`}>
-                <Div styleStr={titleStr}>{item.title}</Div>
-                <Div>{`￥:${item.sku}`}</Div>
+                <Div styleStr={titleStr}>
+                  <Tooltip placement="topLeft" title={item.title}>
+                    {item.title}
+                  </Tooltip>
+                </Div>
+                <Div styleStr={'display: none'}>{`￥:${item.sku}`}</Div>
                 <Div>{`SKU:${item.sku}`}</Div>
                 <Div styleStr={checkboxItemStr}>
                   <Checkbox
