@@ -22,9 +22,10 @@ import {
 } from '../../../reducer/ActivityManagement/baseInfo';
 // import DateRange from '../../common/DateRange';
 import { FLEX_START_CENTER } from '../../../consts/css';
-import { changeAddGoods } from '../../../actions/CreateActivity/addGoods';
+import { changeAddGoods, resetAddGoods } from '../../../actions/CreateActivity/addGoods';
 import { MATCH_TYPE } from '../../../reducer/ActivityManagement/addGoods';
 import DateRanges from '../../common/DateRanges';
+import { resetRewardInfo } from '../../../actions/CreateActivity/rewardInfo';
 
 class BaseInfo extends Component {
   static displayName = 'BaseInfo';
@@ -42,8 +43,20 @@ class BaseInfo extends Component {
   onChangeType = event => {
     const { value: type } = event.target;
     const { dispatch } = this.props;
+    const matchType = type === 3 ? 4 : 1;
     dispatch(changeBaseInfo(ACTIVITY_TYPE, type));
-    dispatch(changeAddGoods(MATCH_TYPE, type === 3 ? 4 : 1));
+    switch (matchType) {
+      case 1:
+        dispatch(resetAddGoods());
+        break;
+      case 4:
+        dispatch(resetAddGoods());
+        break;
+      default:
+        break;
+    }
+    dispatch(changeAddGoods(MATCH_TYPE, matchType));
+    dispatch(resetRewardInfo());
   };
 
   onChangeSource = e => {
@@ -91,9 +104,7 @@ class BaseInfo extends Component {
           <Div styleStr={itemsStyles}>活动入口：</Div>
           <RadioGroup onChange={event => this.onChangeType(event)} value={activityType}>
             <Radio value={1}>商详</Radio>
-            <Radio value={3} disabled>
-              通天塔
-            </Radio>
+            <Radio value={3}>通天塔</Radio>
           </RadioGroup>
         </Div>
         <Div styleStr={containerStyles}>

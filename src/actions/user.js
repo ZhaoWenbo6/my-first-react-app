@@ -49,18 +49,17 @@ export function requsetUserInfo() {
     console.log(getState());
     getUser().then(response => {
       const {
-        data: { code, result, responseMessage },
         data,
-        status,
+        data: { code, result, message: responseMessage },
       } = response;
-      if (status === 200 && code === '0') {
+      if (response.status === 200 && code === '0') {
         document.cookie = `user_inf=${encodeURIComponent(JSON.stringify(data))}`;
         dispatch(createPayloadAction(USER_INFO, result));
         dispatch(changeLoadingState(true));
       } else {
         message.error(responseMessage);
-        setTimeout(() => window.open(LOGOUT_PAGE, '_self'), 2000);
         dispatch(changeLoadingState(false));
+        setTimeout(() => window.open(LOGOUT_PAGE, '_self'), 2000);
       }
     });
   };

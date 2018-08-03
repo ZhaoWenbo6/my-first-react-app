@@ -18,7 +18,7 @@ export function resetBaseInfo() {
   return (dispatch, getState) => {
     console.log(getState());
     dispatch(changeBaseInfo(ACTIVITY_NAME, ''));
-    dispatch(changeBaseInfo(ACTIVITY_TYPE, 1));
+    dispatch(changeBaseInfo(ACTIVITY_TYPE, -1));
     dispatch(changeBaseInfo(START_TIME, 0));
     dispatch(changeBaseInfo(END_TIME, 0));
     dispatch(changeBaseInfo(ACTIVITY_SOURCE, 1));

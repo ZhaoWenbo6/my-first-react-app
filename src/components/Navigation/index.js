@@ -10,17 +10,26 @@
  */
 import React, { Component } from 'react';
 import { Layout, Menu, Icon } from 'antd';
-import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 import {
-  NEW_ACTIVITY_TEXT,
+  // NEW_ACTIVITY_TEXT,
   ACTIVITY_LIST,
-  ACTIVITY_TEXT_LIST,
-  VIEW_DATA_BY_DAY,
-  VIEW_DATA_BY_ACTIVITY,
+  // ACTIVITY_TEXT_LIST,
+  // VIEW_DATA_BY_DAY,
+  // VIEW_DATA_BY_ACTIVITY,
 } from '../../consts/route';
+import { Div } from '../common/Div';
+import { resetCreateState } from '../../actions/CreateActivity';
+import _ from 'lodash';
 
 class Navigation extends Component {
   static displayName = 'Navigation';
+
+  gotoActivityList = () => {
+    const { dispatch, routeHistory } = this.props;
+    dispatch(resetCreateState());
+    routeHistory.push(ACTIVITY_LIST);
+  };
 
   render() {
     const { SubMenu } = Menu;
@@ -42,43 +51,49 @@ class Navigation extends Component {
             }
           >
             <Menu.Item key="2">
-              <Link to={ACTIVITY_LIST}>活动列表</Link>
+              <Div onClick={() => this.gotoActivityList()}>活动列表</Div>
             </Menu.Item>
           </SubMenu>
-          <SubMenu
-            key="sub2"
-            title={
-              <span>
-                <Icon type="laptop" />数据看板
-              </span>
-            }
-          >
-            <Menu.Item key="3">
-              <Link to={VIEW_DATA_BY_DAY}>按天查看</Link>
-            </Menu.Item>
-            <Menu.Item key="4">
-              <Link to={VIEW_DATA_BY_ACTIVITY}>按活动查看</Link>
-            </Menu.Item>
-          </SubMenu>
-          <SubMenu
-            key="sub3"
-            title={
-              <span>
-                <Icon type="laptop" />活动语管理
-              </span>
-            }
-          >
-            <Menu.Item key="5">
-              <Link to={NEW_ACTIVITY_TEXT}>新增活动语</Link>新增活动语
-            </Menu.Item>
-            <Menu.Item key="6">
-              <Link to={ACTIVITY_TEXT_LIST}>活动语列表</Link>活动语列表
-            </Menu.Item>
-          </SubMenu>
+          {/*<SubMenu*/}
+          {/*key="sub2"*/}
+          {/*title={*/}
+          {/*<span>*/}
+          {/*<Icon type="laptop" />数据看板*/}
+          {/*</span>*/}
+          {/*}*/}
+          {/*>*/}
+          {/*<Menu.Item key="3">*/}
+          {/*<Link to={VIEW_DATA_BY_DAY}>按天查看</Link>*/}
+          {/*</Menu.Item>*/}
+          {/*<Menu.Item key="4">*/}
+          {/*<Link to={VIEW_DATA_BY_ACTIVITY}>按活动查看</Link>*/}
+          {/*</Menu.Item>*/}
+          {/*</SubMenu>*/}
+          {/*<SubMenu*/}
+          {/*key="sub3"*/}
+          {/*title={*/}
+          {/*<span>*/}
+          {/*<Icon type="laptop" />活动语管理*/}
+          {/*</span>*/}
+          {/*}*/}
+          {/*>*/}
+          {/*<Menu.Item key="5">*/}
+          {/*<Link to={NEW_ACTIVITY_TEXT}>新增活动语</Link>新增活动语*/}
+          {/*</Menu.Item>*/}
+          {/*<Menu.Item key="6">*/}
+          {/*<Link to={ACTIVITY_TEXT_LIST}>活动语列表</Link>活动语列表*/}
+          {/*</Menu.Item>*/}
+          {/*</SubMenu>*/}
         </Menu>
       </Sider>
     );
   }
 }
 
-export default Navigation;
+export default connect(mapStateToProps)(Navigation);
+
+function mapStateToProps(state) {
+  return {
+    routeHistory: _.get(state, 'config.routeHistory', {}),
+  };
+}

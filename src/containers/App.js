@@ -5,7 +5,7 @@ import _ from 'lodash';
 import { Layout } from 'antd';
 import PageHeader from '../components/PageHeader';
 import Navigation from '../components/Navigation';
-import PageBreadcrumb from '../components/PageBreadcrumb';
+// import PageBreadcrumb from '../components/PageBreadcrumb';
 import PageFooter from '../components/PageFooter';
 
 class App extends Component {
@@ -21,7 +21,7 @@ class App extends Component {
           <Layout style={{ padding: '10px 50px 0' }}>
             <Navigation />
             <Layout style={{ padding: '0 24px 24px' }}>
-              <PageBreadcrumb />
+              {/*<PageBreadcrumb />*/}
               <Content style={{ background: '#fff', padding: 24, margin: 0 }}>
                 {this.props.children}
               </Content>

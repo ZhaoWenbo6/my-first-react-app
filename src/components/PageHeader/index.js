@@ -5,14 +5,29 @@ import { Logo } from '../common/Logo';
 import { Div } from '../common/Div';
 import { LOGOUT_PAGE } from '../../consts/url';
 import { FLEX_CENTER_CENTER } from '../../consts/css';
+import { logout } from '../../utils/api-service';
 import { connect } from 'react-redux';
 import _ from 'lodash';
+// import { deleteAllCookies } from '../../utils/cookie';
 
 class PageHeader extends Component {
   static displayName = 'PageHeader';
 
+  clearAllCookie = () => {
+    const keys = document.cookie.match(/[^ =;]+(?=\=)/g);
+    if (keys) {
+      for (let i = keys.length; i >= 0; i--) {
+        document.cookie = `${keys[i]} =0;expires= ${new Date(0).toUTCString()}`;
+      }
+    }
+  };
+
   logout = () => {
-    document.cookie = 'sso.jd.com=';
+    // document.cookie = 'sso.jd.com=';
+    this.clearAllCookie();
+    logout().then(response => {
+      console.log(response.data);
+    });
     window.open(LOGOUT_PAGE, '_self');
   };
 

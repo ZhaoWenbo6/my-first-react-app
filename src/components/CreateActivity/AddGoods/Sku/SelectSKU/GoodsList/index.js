@@ -100,6 +100,43 @@ class GoodsList extends Component {
     }
   };
 
+  selectGoods = (event, item) => {
+    const {
+      target: { checked },
+    } = event;
+    const {
+      dispatch,
+      selectedGoodsList: { data: selectedData = [] },
+      goodsListObject,
+    } = this.props;
+    const resultList = selectedData;
+    const { data: goodsListData = [] } = goodsListObject;
+    const goodsList = goodsListData;
+    let goodsResultList = [];
+    if (checked) {
+      goodsResultList = goodsList.map(beforeItem => {
+        if (beforeItem.sku === item.sku) {
+          beforeItem.isChecked = true;
+          return beforeItem;
+        }
+        return beforeItem;
+      });
+      resultList.push({ ...item });
+    } else {
+      goodsResultList = goodsList.map(beforeItem => {
+        if (beforeItem.sku === item.sku) {
+          beforeItem.isChecked = false;
+          return beforeItem;
+        }
+        return beforeItem;
+      });
+      const index = resultList.indexOf(item);
+      resultList.splice(index, 1);
+    }
+    dispatch(changeAddGoods(GOODS_LIST_OBJECT, { ...goodsListObject, data: goodsResultList }));
+    dispatch(changeAddGoods(SELECTED_GOODS_LIST, { data: resultList }));
+  };
+
   render() {
     const { goodsListObject, selectedGoodsList, filterParams } = this.props;
     return (

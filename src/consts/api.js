@@ -26,6 +26,7 @@ export const API_DEFAULT = '/mock/5b320f940a29144fd436edf9';
 export const API_USER_INFO = `${API_DEFAULT}/getUserInfo`;
 
 export const GET_USER_INFO = '/usersInfo.do';
+export const GET_LOGOUT = '/loginOut.do';
 
 export const CREATE_PREFIXES = '/selfProduce'; //创建活动部分
 export const CLASSIFICATION = `${CREATE_PREFIXES}/selectByParentCode.do`; //商品分类
@@ -33,6 +34,7 @@ export const GOODSLIST = `${CREATE_PREFIXES}/queryList.do`; //商品列表
 
 export const CHECK = '/validate'; //校验
 export const CHECK_SKU = `${CHECK}/sku.do`; //sku
+export const TOWER_SKU_ID = `${CHECK}/tongtianactivity.do`; //通天塔sku
 export const CHECK_JBEAN = `${CHECK}/jingbeanpool.do`; //京豆
 export const CHECK_COUPON = `${CHECK}/coupon.do`; //优惠券
 export const CHECK_TOWER = `${CHECK}/tongtianactivity.do`; //通天塔

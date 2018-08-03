@@ -11,6 +11,5 @@ import initStore from './init-store';
 import initUI from './init-ui';
 import initEnv from './init-env';
 import initApi from './init-api';
-// import initUserInfo from './init-user-info';
 
 export default [initEnv, initApi, initStore, initUI];

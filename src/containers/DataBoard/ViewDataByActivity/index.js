@@ -1,11 +1,16 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
+import FilterCard from './components/FilterCard';
 
 class ViewDataByActivity extends Component {
   static displayName = 'ViewDataByActivity';
 
   render() {
-    return <div>ViewDataByActivity</div>;
+    return (
+      <Fragment>
+        <FilterCard />
+      </Fragment>
+    );
   }
 }
 

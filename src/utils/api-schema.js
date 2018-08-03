@@ -21,12 +21,21 @@ import {
   ACTIVITY_DETAILS,
   UPDATE_CHECK_FLOW,
   GET_USER_INFO,
+  GET_LOGOUT,
+  TOWER_SKU_ID,
 } from '../consts/api';
 
 export function user() {
   return () => ({
     method: 'get',
     path: GET_USER_INFO,
+  });
+}
+
+export function logout() {
+  return () => ({
+    method: 'get',
+    path: GET_LOGOUT,
   });
 }
 
@@ -50,6 +59,14 @@ export function skuId(params) {
   return () => ({
     method: 'post',
     path: CHECK_SKU,
+    payload: params,
+  });
+}
+
+export function towerSkuId(params) {
+  return () => ({
+    method: 'post',
+    path: TOWER_SKU_ID,
     payload: params,
   });
 }

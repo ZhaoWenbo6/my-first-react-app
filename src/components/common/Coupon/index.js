@@ -34,22 +34,15 @@ class Coupon extends Component {
   };
 
   emitChange = event => {
-    const {
-      dispatch,
-      rewardPerson,
-      domIndex,
-      itemInfo,
-      activityStartTime,
-      activityEndTime,
-    } = this.props;
+    const { dispatch, rewardPerson, domIndex, itemInfo, startTime, endTime } = this.props;
     const {
       target: { value },
     } = event;
     if (value !== '') {
       checkCoupon({
         activityKey: value,
-        activityStartTime: activityStartTime,
-        activityEndTime: activityEndTime,
+        activityStartTime: startTime,
+        activityEndTime: endTime,
       }).then(response => {
         const {
           data: { code, message: responseMessage },
@@ -99,7 +92,7 @@ class Coupon extends Component {
       updateRewardInfo({
         rewardPerson: rewardPerson,
         domIndex: domIndex,
-        updateList: { ...itemInfo, [keyName]: value, couponName: '', couponNum: 0 },
+        updateList: { ...itemInfo, [keyName]: value },
         option: 'update',
       })
     );
@@ -107,7 +100,7 @@ class Coupon extends Component {
 
   render() {
     const {
-      itemInfo: { couponId, prizeQuota, prizeQuotaDay, couponName },
+      itemInfo: { couponId, prizeQuota, prizeQuotaDay, couponName, couponNum },
       disabled,
     } = this.props;
     const nameLimitStyle = `color: red;margin: 0 30px; visibility:${
@@ -117,10 +110,10 @@ class Coupon extends Component {
     return (
       <Card style={{ width: 750 }}>
         <Div styleStr={`${FLEX_START_CENTER}; margin: 0 10px 10px`}>
-          <Div styleStr={'margin: 10px'}>优惠券批次ID：</Div>
+          <Div styleStr={'margin: 10px 30px 10px 10px'}>优惠券Key：</Div>
           <Input
             value={couponId}
-            placeholder="请输入优惠券ID"
+            placeholder="请输入优惠券Key"
             style={{ width: '200px' }}
             onChange={event => this.handleChange(event)}
             disabled={disabled}
@@ -167,6 +160,15 @@ class Coupon extends Component {
             </Tooltip>
           </Div>
         </Div>
+        {couponNum < prizeQuota ? (
+          <Div styleStr={`color: red; margin: 0 30px;${SINGLE_LINE_OMITTED}; width: 280px;`}>
+            <Tooltip placement="topLeft" title={`超过优惠券剩余总数，目前仅剩${couponNum}`}>
+              {`超过优惠券剩余总数，目前仅剩${couponNum}`}
+            </Tooltip>
+          </Div>
+        ) : (
+          <Fragment />
+        )}
       </Card>
     );
   }
@@ -176,7 +178,7 @@ export default connect(mapStateToProps)(Coupon);
 
 function mapStateToProps(state) {
   return {
-    activityStartTime: _.get(state, 'create.baseInfo.activityStartTime', 0),
-    activityEndTime: _.get(state, 'create.baseInfo.activityEndTime', 0),
+    startTime: _.get(state, 'create.baseInfo.startTime', 0),
+    endTime: _.get(state, 'create.baseInfo.endTime', 0),
   };
 }

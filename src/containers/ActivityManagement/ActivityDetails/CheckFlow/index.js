@@ -19,6 +19,7 @@ import { ACTIVITY_ID } from '../../../../reducer/ActivityList';
 import { ACTIVITY_CHECK_FLOW } from '../../../../reducer/ActivityDetails';
 import { changeActivityDetailsValue } from '../../../../actions/ActivityDetails';
 import { submitCheckFlow } from '../../../../utils/api-service';
+import { requestActivityListInfo } from '../../../../actions/ActivityList';
 
 const RadioGroup = Radio.Group;
 const { TextArea } = Input;
@@ -56,7 +57,7 @@ class RewardType extends Component {
 
   submit = () => {
     const { radioValue, opinionStr } = this.state;
-    const { routeHistory, activityId } = this.props;
+    const { routeHistory, activityId, dispatch } = this.props;
     submitCheckFlow({
       activityId: activityId,
       checkResult: radioValue,
@@ -69,11 +70,12 @@ class RewardType extends Component {
       } = response;
       if (status === 200 && code === '0') {
         message.success('审批成功');
+        routeHistory.push(ACTIVITY_LIST);
+        dispatch(requestActivityListInfo(1, 10));
       } else {
         message.error(responseMessage);
       }
     });
-    routeHistory.push(ACTIVITY_LIST);
   };
 
   render() {

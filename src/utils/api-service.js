@@ -10,6 +10,7 @@
  */
 import axios from 'axios';
 import * as apiSchema from './api-schema';
+import LOGOUT_PAGE from '../consts/url';
 
 let shareService;
 export function initRemote(serviceUrl = '') {
@@ -22,6 +23,25 @@ export function initRemote(serviceUrl = '') {
     },
   });
 }
+
+// 添加响应拦截器
+axios.interceptors.response.use(
+  function(response) {
+    // api请求302重定向处理，重定向api返回的data是登陆页面的代码
+    const { data, status } = response;
+    if (status === 200 && typeof data === 'object') {
+      return response;
+    } else {
+      window.location.href = LOGOUT_PAGE;
+    }
+    return response;
+  },
+  function(error) {
+    // 异常处理
+    window.location.href = LOGOUT_PAGE;
+    return Promise.reject(error);
+  }
+);
 
 function makeService(service, api = {}) {
   // todo cache support and connect to redux state
@@ -38,6 +58,10 @@ export function getUser() {
   return makeService(shareService, apiSchema.user()());
 }
 
+export function logout() {
+  return makeService(shareService, apiSchema.logout()());
+}
+
 export function getClassification(params) {
   return makeService(shareService, apiSchema.classification(params)());
 }
@@ -48,6 +72,10 @@ export function getGoodsList(params) {
 
 export function checkSkuId(params) {
   return makeService(shareService, apiSchema.skuId(params)());
+}
+
+export function checkTowerSkuId(params) {
+  return makeService(shareService, apiSchema.towerSkuId(params)());
 }
 
 export function checkJBean(params) {

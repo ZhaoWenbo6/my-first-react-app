@@ -107,10 +107,16 @@ class GoodsList extends Component {
                 <Div styleStr={'display: none'}>{`￥:${item.sku}`}</Div>
                 <Div>{`SKU:${item.sku}`}</Div>
                 <Div styleStr={checkboxItemStr}>
-                  <Checkbox
-                    checked={item.isChecked}
-                    onChange={event => this.selectGoods(event, item)}
-                  />
+                  <Tooltip
+                    placement="top"
+                    title={item.used ? '该商品正在参与活动，故无法勾选' : ''}
+                  >
+                    <Checkbox
+                      disabled={item.used}
+                      checked={item.used ? false : item.isChecked}
+                      onChange={event => this.selectGoods(event, item)}
+                    />
+                  </Tooltip>
                 </Div>
               </Div>
             </List.Item>

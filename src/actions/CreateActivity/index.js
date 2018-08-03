@@ -6,6 +6,7 @@ import { CURRENT_STEP } from '../../reducer/ActivityManagement';
 import { resetBaseInfo } from './baseInfo';
 import { resetAddGoods } from './addGoods';
 import { resetRewardInfo } from './rewardInfo';
+import { resetQueryFilter } from '../ActivityList';
 
 export function changeCurrentStep(type, payload) {
   return (dispatch, getState) => {
@@ -32,17 +33,31 @@ export function checkSecondData(stateObj) {
     skuFile,
     writeBizids,
     isResponse,
+    matchType,
+    towerSkuFile,
+    writeTowerBizids,
+    isTowerResponse,
   } = stateObj;
-  if (selectedType) {
-    isDisable = skuFile.length > 0 || (isResponse && writeBizids.length > 0);
-  } else {
-    isDisable = data.length > 0;
+  switch (matchType) {
+    case 1:
+      if (selectedType) {
+        isDisable = skuFile.length > 0 || (isResponse && writeBizids.length > 0);
+      } else {
+        isDisable = data.length > 0;
+      }
+      break;
+    case 4:
+      isDisable = towerSkuFile.length > 0 && (isTowerResponse && writeTowerBizids.length > 0);
+      break;
+    default:
+      break;
   }
+
   return isDisable;
 }
 
 export function checkThirdData(stateObj) {
-  let isDisable = false;
+  let isDisable = true;
   const {
     sharerRewardInfo,
     recipientRewardInfo,
@@ -59,8 +74,11 @@ export function checkThirdData(stateObj) {
     if (item.rewardType === 4) {
       const { couponId, couponName, couponNum, prizeQuota, prizeQuotaDay } = item;
       isDisable =
+        isDisable &&
         couponId !== '' &&
         couponName !== '' &&
+        prizeQuota !== 0 &&
+        prizeQuotaDay !== 0 &&
         couponNum >= prizeQuota &&
         prizeQuotaDay <= prizeQuota;
       shareRewardLimitCount.push(prizeQuota);
@@ -71,11 +89,10 @@ export function checkThirdData(stateObj) {
         callerCode,
         key,
         orgId,
-        prizeQuota,
-        prizeQuotaDay,
         prizeQuotaTime,
         secondBusinessId,
         topBusinessId,
+        JBeanNum,
       } = item;
       isDisable =
         isDisable &&
@@ -85,20 +102,25 @@ export function checkThirdData(stateObj) {
         orgId !== '' &&
         secondBusinessId !== '' &&
         topBusinessId !== '' &&
-        prizeQuotaDay * prizeQuotaTime < prizeQuota &&
-        prizeQuotaDay &&
+        item.prizeQuota * prizeQuotaTime <= JBeanNum &&
+        item.prizeQuota !== 0 &&
+        item.prizeQuotaDay !== 0 &&
         prizeQuotaTime &&
-        prizeQuota;
-      shareRewardLimitCount.push(prizeQuota);
-      shareRewardLimitDayCount.push(prizeQuotaDay);
+        item.prizeQuota &&
+        JBeanNum !== 0;
+      shareRewardLimitCount.push(item.prizeQuota);
+      shareRewardLimitDayCount.push(item.prizeQuotaDay);
     }
   });
   recipientRewardInfo.map(item => {
     if (item.rewardType === 4) {
       const { couponId, couponName, couponNum, prizeQuota, prizeQuotaDay } = item;
       isDisable =
+        isDisable &&
         couponId !== '' &&
         couponName !== '' &&
+        prizeQuota !== 0 &&
+        prizeQuotaDay !== 0 &&
         couponNum >= prizeQuota &&
         prizeQuotaDay <= prizeQuota &&
         viewRewardLimitCount.push(prizeQuota);
@@ -109,11 +131,10 @@ export function checkThirdData(stateObj) {
         callerCode,
         key,
         orgId,
-        prizeQuota,
-        prizeQuotaDay,
         prizeQuotaTime,
         secondBusinessId,
         topBusinessId,
+        JBeanNum,
       } = item;
       isDisable =
         isDisable &&
@@ -123,26 +144,30 @@ export function checkThirdData(stateObj) {
         orgId !== '' &&
         secondBusinessId !== '' &&
         topBusinessId !== '' &&
-        prizeQuotaDay * prizeQuotaTime < prizeQuota &&
-        prizeQuotaDay &&
+        item.prizeQuota * prizeQuotaTime <= JBeanNum &&
+        item.prizeQuota !== 0 &&
+        item.prizeQuotaDay !== 0 &&
         prizeQuotaTime &&
-        prizeQuota;
-      viewRewardLimitCount.push(prizeQuota);
-      viewRewardLimitDayCount.push(prizeQuotaDay);
+        item.prizeQuota &&
+        JBeanNum !== 0;
+      viewRewardLimitCount.push(item.prizeQuota);
+      viewRewardLimitDayCount.push(item.prizeQuotaDay);
     }
   });
   isDisable =
-    isDisable && shareRewardLimit
+    isDisable &&
+    (shareRewardLimit
       ? shareRewardLimit <= shareRewardLimitCount.reduce((prev, next) => Math.max(prev, next))
-      : true && shareRewardLimitDay
-        ? shareRewardLimitDay <=
-          shareRewardLimitDayCount.reduce((prev, next) => Math.max(prev, next))
-        : true && viewRewardLimit
-          ? viewRewardLimit <= viewRewardLimitCount.reduce((prev, next) => Math.max(prev, next))
-          : true && viewRewardLimitDay
-            ? viewRewardLimitDay <=
-              viewRewardLimitDayCount.reduce((prev, next) => Math.max(prev, next))
-            : true;
+      : true) &&
+    (shareRewardLimitDay
+      ? shareRewardLimitDay <= shareRewardLimitDayCount.reduce((prev, next) => Math.max(prev, next))
+      : true) &&
+    (viewRewardLimit
+      ? viewRewardLimit <= viewRewardLimitCount.reduce((prev, next) => Math.max(prev, next))
+      : true) &&
+    (viewRewardLimitDay
+      ? viewRewardLimitDay <= viewRewardLimitDayCount.reduce((prev, next) => Math.max(prev, next))
+      : true);
   return isDisable;
 }
 
@@ -157,6 +182,8 @@ export function splicCreateActivityParameters() {
         selectedGoodsList: { data },
         skuFile,
         writeBizids,
+        towerSkuFile,
+        writeTowerBizids,
       },
       rewardInfo,
     } = getState().create;
@@ -172,12 +199,12 @@ export function splicCreateActivityParameters() {
             bizIds: data.map(item => item.sku).join(','),
           };
         } else {
-          if (skuFile.length) {
+          if (skuFile.length === 0) {
             secondParams = {
               bizIds: writeBizids,
             };
           } else {
-            formData.append('skuFile', `${skuFile[0]}`);
+            formData.append('skuFile', skuFile[0]);
           }
         }
         break;
@@ -186,6 +213,8 @@ export function splicCreateActivityParameters() {
       case 3:
         break;
       case 4:
+        secondParams = { bizIds: writeTowerBizids };
+        formData.append('activityImge', towerSkuFile[0]);
         break;
       default:
         break;
@@ -214,8 +243,9 @@ export function requestAddActivity(params) {
       if (status === 200) {
         if (code === '0') {
           message.success('活动创建成功');
-          routeHistory.push(ACTIVITY_LIST);
           dispatch(resetCreateState());
+          dispatch(resetQueryFilter());
+          routeHistory.push(ACTIVITY_LIST);
         } else {
           message.error(responseMessage);
         }
@@ -228,9 +258,8 @@ export function requestAddActivity(params) {
   };
 }
 
-export function resetCreateState(type, payload) {
-  return (dispatch, getState) => {
-    console.log(getState(type, payload));
+export function resetCreateState() {
+  return dispatch => {
     dispatch(changeCurrentStep(CURRENT_STEP, -1));
     dispatch(resetBaseInfo());
     dispatch(resetAddGoods());

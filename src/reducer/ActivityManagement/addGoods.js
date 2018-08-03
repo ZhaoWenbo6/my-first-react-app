@@ -54,6 +54,15 @@ const isResponse = handleAction(IS_RESPONSE, returnPayload, false);
 export const SKU_FILE = 'SKU_FILE';
 const skuFile = handleAction(SKU_FILE, returnPayload, []);
 
+export const WRITE_TOWER_BIZIDS = 'WRITE_TOWER_BIZIDS';
+const writeTowerBizids = handleAction(WRITE_TOWER_BIZIDS, returnPayload, '');
+
+export const IS_TOWER_RESPONSE = 'IS_TOWER_RESPONSE';
+const isTowerResponse = handleAction(IS_TOWER_RESPONSE, returnPayload, false);
+
+export const TOWER_SKU_FILE = 'TOWER_SKU_FILE';
+const towerSkuFile = handleAction(TOWER_SKU_FILE, returnPayload, []);
+
 export default combineReducers({
   matchType,
   goodsListObject,
@@ -69,4 +78,7 @@ export default combineReducers({
   writeBizids,
   skuFile,
   isResponse,
+  writeTowerBizids,
+  isTowerResponse,
+  towerSkuFile,
 });

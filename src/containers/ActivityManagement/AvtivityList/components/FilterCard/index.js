@@ -55,7 +55,9 @@ class FilterCard extends Component {
 
   onChangeValue = (value, type) => {
     const { dispatch } = this.props;
-    dispatch(changeActivityListValue(type, value));
+    if (value !== undefined) {
+      dispatch(changeActivityListValue(type, value));
+    }
   };
 
   queryActivityList = () => {
@@ -95,12 +97,20 @@ class FilterCard extends Component {
             <Div styleStr={'width: 100px;'}>活动ID：</Div>
           </Col>
           <Col span={8}>
-            <InputNumber
-              style={{ width: '200px' }}
-              value={activityId}
-              placeholder="请输入活动ID"
-              onChange={value => this.onChangeValue(value, ACTIVITY_ID)}
-            />
+            <Div styleStr="display:flex;align-items: center;">
+              <InputNumber
+                style={{ width: '200px' }}
+                value={activityId}
+                maxLength={18}
+                placeholder="请输入活动ID"
+                onChange={value => this.onChangeValue(value, ACTIVITY_ID)}
+              />
+              {activityId.length === 18 ? (
+                <Div styleStr="color: red">ID位数为18位以内</Div>
+              ) : (
+                <Fragment />
+              )}
+            </Div>
           </Col>
           <Col span={2}>
             <Div styleStr={'width: 100px;'}>活动入口：</Div>

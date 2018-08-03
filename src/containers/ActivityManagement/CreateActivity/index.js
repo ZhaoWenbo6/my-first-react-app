@@ -20,7 +20,7 @@ import {
   checkFirstData,
   splicCreateActivityParameters,
   checkSecondData,
-  // checkThirdData,
+  checkThirdData,
 } from '../../../actions/CreateActivity';
 import { FLEX_CENTER_CENTER } from '../../../consts/css';
 import { BASE_INFO, ADD_GOODS, SET_REWARDS, ACTIVITY_PREVIEW } from '../../../consts/route';
@@ -54,7 +54,7 @@ class CreateActivity extends Component {
   };
 
   checkButtonStatus = () => {
-    const { currentStep, baseInfo, addGoods } = this.props;
+    const { currentStep, baseInfo, addGoods, rewardInfo } = this.props;
     let isDisable = true;
     switch (currentStep) {
       case 0:
@@ -64,7 +64,7 @@ class CreateActivity extends Component {
         isDisable = checkSecondData(addGoods);
         break;
       case 2:
-        // isDisable = checkThirdData(rewardInfo);
+        isDisable = checkThirdData(rewardInfo);
         break;
       default:
         break;

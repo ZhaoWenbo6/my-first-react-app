@@ -8,14 +8,14 @@
  * @Email: zhaowenbo3@jd.com
  * @motto: Always believe that something wonderful is about to happen
  */
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Div } from '../../../../common/Div';
-import { Input, Upload, Button, Icon, message } from 'antd';
+import { Input, Upload, Button, Icon, message, notification } from 'antd';
 // import reqwest from 'reqwest';
 import _ from 'lodash';
 import { checkSkuId } from '../../../../../utils/api-service';
-import { RESPONSE_CODE_ZERO } from '../../../../../consts/api';
+import { RESPONSE_CODE_ZERO, RESPONSE_CODE_FOUR } from '../../../../../consts/api';
 import { changeAddGoods } from '../../../../../actions/CreateActivity/addGoods';
 import {
   WRITE_BIZIDS,
@@ -46,21 +46,44 @@ class WriteSKU extends Component {
 
   emitChange = event => {
     const { value } = event.target;
-    const { dispatch } = this.props;
-    checkSkuId({ skuIds: value }).then(response => {
+    const { dispatch, startTime, endTime } = this.props;
+    checkSkuId({ skuIds: value, startDate: startTime, endDate: endTime }).then(response => {
       dispatch(changeAddGoods(IS_RESPONSE, true));
       if (response.status === 200) {
-        const { code, message: responseMessage } = response.data;
+        const { code, message: responseMessage, result } = response.data;
         if (code === RESPONSE_CODE_ZERO) {
+          dispatch(changeAddGoods(IS_RESPONSE, true));
           dispatch(changeAddGoods(WRITE_BIZIDS, value));
           message.success('输入的skuId均有效');
+        } else if (code === RESPONSE_CODE_FOUR) {
+          const pop = result.pop ? result.pop : null;
+          const activityFails = result.activityFails ? result.activityFails : null;
+          const skusNotSelf = result.skusNotSelf ? result.skusNotSelf : null;
+          notification.open({
+            message: responseMessage,
+            description: (
+              <Div>
+                {pop ? <Div styleStr={'color:red'}>非自营sku:{pop.join()}</Div> : <Fragment />}
+                {activityFails ? (
+                  <Div styleStr={'color:red'}>sku正在参加其他活动:{activityFails.join()}</Div>
+                ) : (
+                  <Fragment />
+                )}
+                {skusNotSelf ? (
+                  <Div styleStr={'color:red'}>不是自己管理的sku:{skusNotSelf.join()}</Div>
+                ) : (
+                  <Fragment />
+                )}
+              </Div>
+            ),
+          });
+          dispatch(changeAddGoods(IS_RESPONSE, false));
         } else {
-          dispatch(changeAddGoods(WRITE_BIZIDS, ''));
           message.error(responseMessage);
+          dispatch(changeAddGoods(IS_RESPONSE, false));
         }
       } else {
         message.error('网络连接失败');
-        dispatch(changeAddGoods(WRITE_BIZIDS, ''));
       }
     });
   };
@@ -115,5 +138,7 @@ function mapStateToProps(state) {
   return {
     skuFile: _.get(state, 'create.addGoods.skuFile', []),
     writeBizids: _.get(state, 'create.addGoods.writeBizids', []),
+    startTime: _.get(state, 'create.baseInfo.startTime', 0),
+    endTime: _.get(state, 'create.baseInfo.endTime', 0),
   };
 }

@@ -22,4 +22,5 @@ export const MODULE_JBEAN = {
   secondBusinessId: '', //二级业务编号
   orgId: '', //机构号
   rewardRuleCategory: 0, //奖励规则：0，分享者分享完成；1，被分享者查看，3、分享者阶梯奖励，默认都是0
+  JBeanNum: 0,
 };

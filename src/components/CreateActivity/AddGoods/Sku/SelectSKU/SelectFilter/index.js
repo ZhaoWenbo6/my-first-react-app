@@ -75,22 +75,22 @@ class SelectFilter extends Component {
       secondClassification,
       thirdClassification,
     } = this.props;
-    const firstSelectDom = goodsFirstClassification.map((item, index) => (
-      <Option key={item.code + index}>
+    const firstSelectDom = goodsFirstClassification.map(item => (
+      <Option key={item.code}>
         <Tooltip placement="left" title={item.name}>
           {item.name}
         </Tooltip>
       </Option>
     ));
-    const secondSelectDom = goodsSecondClassification.map((item, index) => (
-      <Option key={item.code + index}>
+    const secondSelectDom = goodsSecondClassification.map(item => (
+      <Option key={item.code}>
         <Tooltip placement="left" title={item.name}>
           {item.name}
         </Tooltip>
       </Option>
     ));
-    const thirdSelectDom = goodsThirdClassification.map((item, index) => (
-      <Option key={item.code + index}>
+    const thirdSelectDom = goodsThirdClassification.map(item => (
+      <Option key={item.code}>
         <Tooltip placement="left" title={item.name}>
           {item.name}
         </Tooltip>

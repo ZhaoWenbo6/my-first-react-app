@@ -22,7 +22,9 @@ class DateRanges extends Component {
       const startValue = value[0] ? moment(value[0]) : null;
       const endValue = value[1] ? moment(value[1]) : null;
       const disabled = !(startValue && endValue);
-      return { startValue: startValue, endValue: endValue, disabled: disabled };
+      const mid = moment(startValue);
+      const last = mid.add(91, 'day');
+      return { last: last, startValue: startValue, endValue: endValue, disabled: disabled };
     }
     return null;
   }

@@ -17,6 +17,9 @@ import {
   IS_RESPONSE,
   SKU_FILE,
   GOODS_LIST_OBJECT,
+  WRITE_TOWER_BIZIDS,
+  IS_TOWER_RESPONSE,
+  TOWER_SKU_FILE,
 } from '../../reducer/ActivityManagement/addGoods';
 import { message } from 'antd';
 
@@ -44,6 +47,9 @@ export function resetAddGoods() {
     dispatch(changeAddGoods(WRITE_BIZIDS, ''));
     dispatch(changeAddGoods(IS_RESPONSE, false));
     dispatch(changeAddGoods(SKU_FILE, []));
+    dispatch(changeAddGoods(WRITE_TOWER_BIZIDS, ''));
+    dispatch(changeAddGoods(IS_TOWER_RESPONSE, false));
+    dispatch(changeAddGoods(TOWER_SKU_FILE, []));
   };
 }
 
