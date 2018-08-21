@@ -12,15 +12,13 @@ import { REWARD_PERSON_SHARER, INT_ZERO, OBJECT_EMPTY } from '../../consts/const
 import { MODULE_COUPON } from '../../consts/module';
 
 export function changeRewardInfo(type, payload) {
-  return (dispatch, getState) => {
-    console.log(getState());
+  return dispatch => {
     dispatch(createPayloadAction(type, payload));
   };
 }
 
 export function resetRewardInfo() {
-  return (dispatch, getState) => {
-    console.log(getState());
+  return dispatch => {
     dispatch(createPayloadAction(SHARER_REWARDINFO, [MODULE_COUPON]));
     dispatch(createPayloadAction(RECIPIENT_REWARDINFO, []));
     dispatch(createPayloadAction(SHARE_REWARD_LIMIT, 0));
@@ -37,7 +35,6 @@ export function updateRewardInfo({
   option = '',
 }) {
   return (dispatch, getState) => {
-    console.log(getState());
     const { sharerRewardInfo, recipientRewardInfo } = _.get(getState(), 'create.rewardInfo');
     const resultList = rewardPerson === 0 ? sharerRewardInfo : recipientRewardInfo;
     const actionType = rewardPerson === 0 ? SHARER_REWARDINFO : RECIPIENT_REWARDINFO;

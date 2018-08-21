@@ -60,7 +60,6 @@ class BaseInfo extends Component {
   };
 
   onChangeSource = e => {
-    console.log('radio checked', e.target.value);
     this.setState({
       value: e.target.value,
     });

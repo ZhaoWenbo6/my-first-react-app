@@ -16,37 +16,19 @@ import { message } from 'antd';
 import { getUser } from '../utils/api-service';
 
 export function getUserInfo() {
-  return (dispatch, getState) => {
-    console.log(getState(), USER_INFO);
-    // let getCookie = '';
-    // getCookie = document.cookie.replace(/(?:(?:^|.*;\s*)user_inf\s*\=\s*([^;]*).*$)|^.*$/, '$1');
-    // let parseCookie = {};
-    // if (getCookie.length !== 0) {
-    //   parseCookie = JSON.parse(decodeURIComponent(getCookie));
-    //   //验证身份，系统异常跳到登录页
-    //   if (parseCookie.code === '0') {
-    //     dispatch(createPayloadAction(USER_INFO, parseCookie));
-    //     dispatch(changeLoadingState(true));
-    //   } else {
-    //     message.error(parseCookie.message);
-    //     setTimeout(() => window.open(LOGOUT_PAGE, '_self'), 2000);
-    //   }
-    // } else {
+  return dispatch => {
     dispatch(requsetUserInfo());
-    // }
   };
 }
 
 export function changeUserType(str) {
-  return (dispatch, getState) => {
-    console.log(getState());
+  return dispatch => {
     dispatch(createPayloadAction(USER_TYPE, str));
   };
 }
 
 export function requsetUserInfo() {
-  return (dispatch, getState) => {
-    console.log(getState());
+  return dispatch => {
     getUser().then(response => {
       const {
         data,

@@ -23,11 +23,8 @@ class PageHeader extends Component {
   };
 
   logout = () => {
-    // document.cookie = 'sso.jd.com=';
     this.clearAllCookie();
-    logout().then(response => {
-      console.log(response.data);
-    });
+    logout();
     window.open(LOGOUT_PAGE, '_self');
   };
 

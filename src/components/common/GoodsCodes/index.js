@@ -20,7 +20,6 @@ class GoodsCodes extends Component {
 
   renderSKUSInfo = key => {
     const { skusInfo } = this.props;
-    console.log(key, skusInfo);
     const arr = skusInfo[key].split(',');
     return (
       <div style={{ display: 'flex', flexWrap: 'wrap', maxWidth: '270px' }}>
@@ -31,19 +30,67 @@ class GoodsCodes extends Component {
 
   renderSKUActivity = () => {
     const {
-      data: { matchType, selectedType, selectedGoodsList, skuFile },
+      data: { matchType, selectedType, selectedGoodsList, skuFile, writeBizids },
       skusInfo,
     } = this.props;
     const bizIdsArr =
-      matchType === 1 ? (selectedType === 0 ? selectedGoodsList.data : []) : [2, 3, 4];
+      matchType === 1 ? (selectedType === 0 ? selectedGoodsList.data : writeBizids.split(',')) : [];
     if (selectedType) {
-      return (
-        <Fragment>
-          <Card title={'已选文件'}>
-            <div>{skuFile[0].name}</div>
-          </Card>
-        </Fragment>
-      );
+      if (bizIdsArr[0] !== '') {
+        return (
+          <Fragment>
+            <div
+              style={{ display: `${bizIdsArr.length <= 20 ? 'flex' : 'none'}`, flexWrap: 'wrap' }}
+            >
+              <Card title={`已选商品：共${bizIdsArr.length}个`}>
+                {bizIdsArr.map((item, key) => {
+                  if (skusInfo && skusInfo.length > 0) {
+                    const skuContent = this.renderSKUSInfo(key);
+                    return (
+                      <Popover
+                        content={skuContent}
+                        title="包含的sku"
+                        placement="topLeft"
+                        trigger="hover"
+                        arrowPointAtCenter
+                      >
+                        {item}
+                      </Popover>
+                    );
+                  } else {
+                    return (
+                      <Card.Grid style={gridStyle} key={key}>
+                        {item}
+                      </Card.Grid>
+                    );
+                  }
+                })}
+              </Card>
+            </div>
+            <Div styleStr={`display: ${bizIdsArr.length > 20 ? 'block' : 'none'}`}>
+              <a
+                href={this.state.contentURL ? this.state.contentURL : 'javascript:;'}
+                download="商品文件.txt"
+                onClick={
+                  bizIdsArr.length > 20
+                    ? () => this.createTxtFile(bizIdsArr.map(item => item.sku))
+                    : null
+                }
+              >
+                点击下载
+              </a>
+            </Div>
+          </Fragment>
+        );
+      } else {
+        return (
+          <Fragment>
+            <Card title={'已选文件'}>
+              <div>{skuFile[0].name}</div>
+            </Card>
+          </Fragment>
+        );
+      }
     } else {
       return (
         <Fragment>
@@ -93,16 +140,16 @@ class GoodsCodes extends Component {
 
   renderTowerActivity = () => {
     const {
-      data: { writeTowerBizids, towerSkuFile },
+      data: { writeTowerBizids },
     } = this.props;
     const bizIdsArr = writeTowerBizids.split(',');
     return (
       <Fragment>
-        <Card title={'已选图片'}>
+        {/*<Card title={'已选图片'}>
           <div>{towerSkuFile[0].name}</div>
-        </Card>
+    </Card>*/}
         <div style={{ display: `${bizIdsArr.length <= 20 ? 'flex' : 'none'}`, flexWrap: 'wrap' }}>
-          <Card title={`已选商品：共${bizIdsArr.length}个`}>
+          <Card title={`已选通天塔id：共${bizIdsArr.length}个`}>
             {bizIdsArr.map((item, key) => (
               <Card.Grid style={towerGridStyle} key={key}>
                 {item}

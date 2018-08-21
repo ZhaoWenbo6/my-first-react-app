@@ -6,7 +6,7 @@ import { Layout } from 'antd';
 import PageHeader from '../components/PageHeader';
 import Navigation from '../components/Navigation';
 // import PageBreadcrumb from '../components/PageBreadcrumb';
-import PageFooter from '../components/PageFooter';
+// import PageFooter from '../components/PageFooter';
 
 class App extends Component {
   static displayName = 'App';
@@ -27,27 +27,18 @@ class App extends Component {
               </Content>
             </Layout>
           </Layout>
-          <PageFooter />
+          {/*<PageFooter />*/}
         </Layout>
       </div>
     );
   }
 }
 
-export default connect(
-  mapStateToProps
-  // mapDispatchToProps
-)(App);
+export default connect(mapStateToProps)(App);
 
-function mapStateToProps(state, ownProps) {
-  console.log(state, ownProps);
+function mapStateToProps(state) {
   return {
     userType: _.get(state, 'user.userType', null),
     money: state.user.money,
   };
 }
-
-// function mapDispatchToProps(dispatch, ownProps) {
-//   console.log(dispatch, ownProps);
-//   return {};
-// }

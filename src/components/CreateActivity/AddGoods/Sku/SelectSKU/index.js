@@ -10,7 +10,7 @@
  */
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Card, Button } from 'antd';
+import { Card, Button, Spin } from 'antd';
 import SelectFilter from './SelectFilter';
 import { Div } from '../../../../common/Div';
 import { FLEX_START_CENTER, FLEX_CENTER_CENTER } from '../../../../../consts/css';
@@ -26,18 +26,24 @@ import {
 } from '../../../../../consts/const';
 import _ from 'lodash';
 import { GOODS_LIST_OBJECT } from '../../../../../reducer/ActivityManagement/addGoods';
+import GoodsSKU from './GoodsSKU';
 
 class SelectSKU extends Component {
   static displayName = 'SelectSKU';
 
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = { loading: false };
   }
 
   getGoodsList = params => {
     const { dispatch } = this.props;
-    dispatch(requestGoodsList(GOODS_LIST_OBJECT, params));
+    this.setState({ loading: true });
+    dispatch(requestGoodsList(GOODS_LIST_OBJECT, params, this.changeState));
+  };
+
+  changeState = value => {
+    this.setState({ loading: value });
   };
 
   resetQueryFilter = () => {
@@ -51,14 +57,17 @@ class SelectSKU extends Component {
       secondClassification,
       thirdClassification,
       goodsName,
+      goodsSKU,
       startTime,
       endTime,
     } = this.props;
+    const { loading } = this.state;
     const params = {
       cid1: firstClassification === STRING_ZERO ? null : firstClassification,
       cid2: secondClassification === STRING_ZERO ? null : secondClassification,
       cid3: thirdClassification === STRING_ZERO ? null : thirdClassification,
       searchKey: goodsName === STRING_EMPTY ? null : goodsName,
+      sku: goodsSKU === STRING_EMPTY ? null : goodsSKU,
       saler: null,
       pageNo: INT_ONE,
       pageSize: INT_EIGHT,
@@ -68,25 +77,27 @@ class SelectSKU extends Component {
     return (
       <Fragment>
         <Card style={{ width: '100%' }}>
-          <Div styleStr={FLEX_START_CENTER}>
-            所属品类： <SelectFilter />
-          </Div>
-          <Div styleStr={priceStr}>
-            商品名称： <GoodsName />
-          </Div>
-          <Div styleStr={FLEX_CENTER_CENTER}>
-            <Button
-              type="primary"
-              style={{ margin: '10px' }}
-              onClick={() => this.getGoodsList(params)}
-            >
-              搜索
-            </Button>
-            <Button style={{ margin: '10px' }} onClick={() => this.resetQueryFilter()}>
-              重置
-            </Button>
-          </Div>
-          <GoodsList filterParams={params} />
+          <Spin spinning={loading}>
+            <Div styleStr={FLEX_START_CENTER}>
+              所属品类： <SelectFilter />
+            </Div>
+            <Div styleStr={priceStr}>
+              商品名称： <GoodsName />skuID： <GoodsSKU />
+            </Div>
+            <Div styleStr={FLEX_CENTER_CENTER}>
+              <Button
+                type="primary"
+                style={{ margin: '10px' }}
+                onClick={() => this.getGoodsList(params)}
+              >
+                搜索
+              </Button>
+              <Button style={{ margin: '10px' }} onClick={() => this.resetQueryFilter()}>
+                重置
+              </Button>
+            </Div>
+            <GoodsList filterParams={params} />
+          </Spin>
         </Card>
       </Fragment>
     );
@@ -101,6 +112,7 @@ function mapStateToProps(state) {
     secondClassification: _.get(state, 'create.addGoods.secondClassification', STRING_ZERO),
     thirdClassification: _.get(state, 'create.addGoods.thirdClassification', STRING_ZERO),
     goodsName: _.get(state, 'create.addGoods.goodsName', STRING_EMPTY),
+    goodsSKU: _.get(state, 'create.addGoods.goodsSKU', STRING_EMPTY),
     startTime: _.get(state, 'create.baseInfo.startTime', INT_ZERO),
     endTime: _.get(state, 'create.baseInfo.endTime', INT_ZERO),
   };

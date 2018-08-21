@@ -38,8 +38,53 @@ class SharerInfo extends Component {
     }
   };
 
+  checkButton = () => {
+    let isDisable = true;
+    const { sharerRewardInfo } = this.props;
+    sharerRewardInfo.map(item => {
+      if (item.rewardType === 4) {
+        const { couponId, couponName, couponNum, prizeQuota, prizeQuotaDay } = item;
+        isDisable =
+          isDisable &&
+          couponId !== '' &&
+          couponName !== '' &&
+          prizeQuota !== 0 &&
+          prizeQuotaDay !== 0 &&
+          couponNum >= prizeQuota &&
+          prizeQuotaDay <= prizeQuota;
+      } else if (item.rewardType === 5) {
+        const {
+          businessCode,
+          callerCode,
+          key,
+          orgId,
+          prizeQuotaTime,
+          secondBusinessId,
+          topBusinessId,
+          JBeanNum,
+        } = item;
+        isDisable =
+          isDisable &&
+          businessCode !== '' &&
+          callerCode !== '' &&
+          key !== '' &&
+          orgId !== '' &&
+          secondBusinessId !== '' &&
+          topBusinessId !== '' &&
+          item.prizeQuota * prizeQuotaTime <= JBeanNum &&
+          item.prizeQuota !== 0 &&
+          item.prizeQuotaDay !== 0 &&
+          prizeQuotaTime &&
+          item.prizeQuota &&
+          JBeanNum !== 0;
+      }
+    });
+    return !isDisable;
+  };
+
   render() {
-    const { sharerRewardInfo, rewardPerson, disabled } = this.props;
+    const isDisable = this.checkButton();
+    const { sharerRewardInfo, disabled } = this.props;
     return (
       <Div>
         <h2>1.设置分享者信息</h2>
@@ -50,7 +95,7 @@ class SharerInfo extends Component {
               key={item.random}
               domIndex={index}
               itemInfo={item}
-              rewardPerson={rewardPerson}
+              rewardPerson={0}
               disabled={disabled}
               disabledJBean={
                 sharerRewardInfo.filter(item => item.rewardType === 5).length > 0 ? true : false
@@ -62,7 +107,7 @@ class SharerInfo extends Component {
         {disabled ? (
           <Fragment />
         ) : (
-          <Button type="primary" onClick={() => this.addReward()}>
+          <Button disabled={isDisable} type="primary" onClick={() => this.addReward()}>
             新增奖励
           </Button>
         )}

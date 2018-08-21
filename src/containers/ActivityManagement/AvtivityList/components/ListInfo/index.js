@@ -10,7 +10,7 @@
  */
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Card, Table, Button, Divider, message, Tooltip } from 'antd';
+import { Card, Table, Button, Divider, message, Tooltip, Steps, Popover } from 'antd';
 import _ from 'lodash';
 import moment from 'moment';
 import { requestActivityListInfo } from '../../../../../actions/ActivityList';
@@ -25,7 +25,7 @@ import { changeBaseInfo } from '../../../../../actions/CreateActivity/baseInfo';
 import { ACTIVITY_TYPE } from '../../../../../reducer/ActivityManagement/baseInfo';
 import { SINGLE_LINE_OMITTED, FLEX_CENTER_CENTER } from '../../../../../consts/css';
 
-// const Step = Steps.Step;
+const Step = Steps.Step;
 
 class ListInfo extends Component {
   static displayName = 'ListInfo';
@@ -61,13 +61,10 @@ class ListInfo extends Component {
         } else {
           message.error(responseMessage);
         }
-        console.log(response);
       } else {
         message.error(`请求异常：状态码为：${status}`);
       }
     });
-
-    console.log(id, type);
   };
 
   sendIdToDetail = id => {
@@ -83,6 +80,14 @@ class ListInfo extends Component {
     routeHistory.push(ACTIVITY_DETAILS);
   };
 
+  renderCheckMessage = (erp, checkMessage) => {
+    return (
+      <Div styleStr={checkMessageStr}>
+        {erp}:{checkMessage}
+      </Div>
+    );
+  };
+
   render() {
     const {
       shareActivityList: { pageNum = 1, pageSize = 10, list = [], total },
@@ -90,15 +95,16 @@ class ListInfo extends Component {
     } = this.props;
     const data = list.map((item, index) => {
       return {
+        key: index,
         index: index + 1 + (pageNum - 1) * 10,
-        activityName: item.activityName,
+        activityListName: item.activityName,
         activityType: item.activityType,
         id: item.id,
-        type: item.type === 1 ? '商详' : '通天塔',
+        type: item.type === 1 ? '商详' : item.type === 2 ? '店铺' : '通天塔',
         creator: item.creator,
-        createTime: moment(item.createTime).format('YYYY-MM-DD hh:mm:ss'),
-        startTime: moment(item.startTime).format('YYYY-MM-DD hh:mm:ss'),
-        endTime: moment(item.endTime).format('YYYY-MM-DD hh:mm:ss'),
+        createTime: moment(item.createTime).format('YYYY-MM-DD HH:mm:ss'),
+        startTime: moment(item.startTime).format('YYYY-MM-DD HH:mm:ss'),
+        endTime: moment(item.endTime).format('YYYY-MM-DD HH:mm:ss'),
         status: item.status,
         auditStatus: item.auditStatus,
         checkFlowVo: item.checkFlowVo,
@@ -116,15 +122,15 @@ class ListInfo extends Component {
       },
       {
         title: '活动名称',
-        dataIndex: 'activityName',
-        key: 'activityName',
+        dataIndex: 'activityListName',
+        key: 'activityListName',
         align: 'center',
         fixed: 'left',
         width: 100,
         render: (text, record) => (
           <Div styleStr={`${SINGLE_LINE_OMITTED};width:100px;`}>
-            <Tooltip placement="left" title={record.activityName}>
-              {record.activityName}
+            <Tooltip placement="left" title={record.activityListName}>
+              {record.activityListName}
             </Tooltip>
           </Div>
         ),
@@ -142,6 +148,18 @@ class ListInfo extends Component {
         key: 'type',
         align: 'center',
         width: 100,
+      },
+      {
+        title: '活动类型',
+        dataIndex: 'activityType',
+        key: 'activityType',
+        align: 'center',
+        width: 100,
+        render: (text, record) => (
+          <Div styleStr={`${SINGLE_LINE_OMITTED};width:100px;`}>
+            {record.activityType ? '自营' : 'POP'}
+          </Div>
+        ),
       },
       {
         title: '创建人',
@@ -195,28 +213,64 @@ class ListInfo extends Component {
         align: 'center',
         render: (text, record) => {
           const { checkFlowMessages } = record.checkFlowVo;
-          return (
-            <Div>
-              {checkFlowMessages.length
-                ? checkFlowMessages.map(item => {
-                    if (item.checkResult === 2) {
-                      return (
-                        <Tooltip placement="left" title={item.message} style={{ margin: '0 10px' }}>
-                          审核不通过
-                        </Tooltip>
-                      );
-                    } else if (item.checkResult === 1) {
-                      return ' 审核通过 ';
-                    } else if (item.checkResult === 0) {
-                      return ' 未审核 ';
-                    }
-                  })
-                : record.auditStatus
-                  ? record.auditStatus === 1
-                    ? '审核通过'
-                    : '审核不通过'
-                  : '未审核'}
-            </Div>
+          const res = [];
+          if (checkFlowMessages.length) {
+            checkFlowMessages.forEach(item => {
+              const { checkResult } = item;
+              res.push(
+                checkResult === 1 ? '审核通过' : checkResult === 2 ? '审核不通过' : '待审核'
+              );
+            });
+          } else if (record.auditStatus === 1) {
+            res.push('审核通过');
+          } else if (record.auditStatus === 2) {
+            res.push('审核不通过');
+          } else if (record.auditStatus === 0) {
+            res.push('待审核');
+          }
+          const st = (
+            <Steps size="small" direction="vertical">
+              {checkFlowMessages.length ? (
+                checkFlowMessages.map((item, index, list) => {
+                  const { checkResult, message, checkErp } = item;
+                  const two =
+                    list.length > 1 && index === 1 && [0, 2].includes(list[0].checkResult);
+                  const status =
+                    checkResult === 1
+                      ? 'finish'
+                      : checkResult === 2
+                        ? 'error'
+                        : two
+                          ? 'wait'
+                          : 'process';
+                  const description =
+                    checkResult === 1
+                      ? '审核通过'
+                      : checkResult === 2
+                        ? `审核不通过：${message}`
+                        : '待审核';
+                  return (
+                    <Step
+                      status={status}
+                      description={
+                        <Div>
+                          <Div>{checkErp}</Div>
+                          <Div>{description}</Div>
+                        </Div>
+                      }
+                    />
+                  );
+                })
+              ) : (
+                <Step status="wait" description="没有数据" />
+              )}
+            </Steps>
+          );
+
+          return record.activityType === 0 ? (
+            '—'
+          ) : (
+            <Popover content={st}>{res[0] === '审核不通过' ? res[0] : res[res.length - 1]}</Popover>
           );
         },
       },
@@ -243,7 +297,9 @@ class ListInfo extends Component {
               </Fragment>
             );
           const isCheckFlow = record.checkFlowVo.ifCheck ? (
-            record.auditStatus ? (
+            record.status === 2 ? (
+              <Fragment />
+            ) : record.auditStatus ? (
               <Fragment />
             ) : (
               <Fragment>
@@ -283,8 +339,7 @@ class ListInfo extends Component {
           <Table
             columns={columns}
             dataSource={data}
-            onChange={this.handleTableChange}
-            rowKey={record => record.id}
+            rowKey={record => record.key}
             scroll={{ x: 1800 }}
             pagination={{
               onChange: (pageNo, pageSizes = 10) => {
@@ -310,3 +365,5 @@ function mapStateToProps(state) {
     shareActivityList: _.get(state, 'activityList.shareActivityList', []),
   };
 }
+
+const checkMessageStr = 'word-wrap:break-word';

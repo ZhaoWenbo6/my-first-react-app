@@ -20,19 +20,18 @@ import {
   WRITE_TOWER_BIZIDS,
   IS_TOWER_RESPONSE,
   TOWER_SKU_FILE,
+  GOODS_SKU,
 } from '../../reducer/ActivityManagement/addGoods';
 import { message } from 'antd';
 
 export function changeAddGoods(type, payload) {
-  return (dispatch, getState) => {
-    console.log(getState());
+  return dispatch => {
     dispatch(createPayloadAction(type, payload));
   };
 }
 
 export function resetAddGoods() {
-  return (dispatch, getState) => {
-    console.log(getState());
+  return dispatch => {
     dispatch(changeAddGoods(MATCH_TYPE, 1));
     dispatch(changeAddGoods(GOODS_LIST_OBJECT, {}));
     dispatch(changeAddGoods(SELECTED_GOODS_LIST, {}));
@@ -54,18 +53,17 @@ export function resetAddGoods() {
 }
 
 export function resetQueryFilter() {
-  return (dispatch, getState) => {
-    console.log(getState());
+  return dispatch => {
     dispatch(createPayloadAction(GOODS_NAME, ''));
     dispatch(changeAddGoods(FIRST_CLASSIFICATION, '0')); //设置一级分类
     dispatch(changeAddGoods(SECOND_CLASSIFICATION, '0')); //恢复默认值
     dispatch(changeAddGoods(THIRD_CLASSIFICATION, '0')); //恢复默认值
+    dispatch(changeAddGoods(GOODS_SKU, '')); //恢复默认值
   };
 }
 
-export function requestGoodsList(type, params = {}) {
+export const requestGoodsList = (type, params = {}, callback) => {
   return (dispatch, getState) => {
-    console.log(getState());
     getGoodsList(params).then(response => {
       if (response.status === 200) {
         const {
@@ -87,13 +85,13 @@ export function requestGoodsList(type, params = {}) {
         );
         console.log(markList);
       }
+      callback(false);
     });
   };
-}
+};
 
 export function requestClassification(type, params = {}) {
-  return (dispatch, getState) => {
-    console.log(getState());
+  return dispatch => {
     getClassification(params).then(response => {
       const {
         status,
@@ -108,7 +106,6 @@ export function requestClassification(type, params = {}) {
       } else {
         message.error(`请求异常，状态码为${status}`);
       }
-      console.log(response);
     });
   };
 }

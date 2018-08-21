@@ -8,7 +8,7 @@ class PageFooter extends Component {
   render() {
     const { Footer } = Layout;
     return (
-      <Footer style={{ textAlign: 'center' }}>
+      <Footer style={{ textAlign: 'center', height: '74px' }}>
         <p>Copyright@2004-2018 JD.com 京东版权所有 京ICP证070359</p>
       </Footer>
     );

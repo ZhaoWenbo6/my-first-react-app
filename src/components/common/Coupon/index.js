@@ -15,7 +15,7 @@ class Coupon extends Component {
 
   constructor(props) {
     super(props);
-    this.emitChangeDebounced = _.debounce(this.emitChange, 1000);
+    this.emitChangeDebounced = _.debounce(this.emitChange, 4000);
   }
 
   handleChange = event => {
@@ -26,15 +26,39 @@ class Coupon extends Component {
       updateRewardInfo({
         rewardPerson: rewardPerson,
         domIndex: domIndex,
-        updateList: { ...itemInfo, [COUPON_ID]: value, couponName: '', couponNum: 0 },
+        updateList: {
+          ...itemInfo,
+          [COUPON_ID]: value,
+          couponName: '',
+          couponNum: 0,
+          prizeQuotaTime: 1,
+        },
         option: 'update',
       })
     );
     this.emitChangeDebounced(event);
   };
 
+  deduplication = (arr, value) => {
+    if (arr.filter(item => item.couponId === value).length > 1) {
+      message.warning('输入优惠券Key重复');
+      return '';
+    } else {
+      return value;
+    }
+  };
+
   emitChange = event => {
-    const { dispatch, rewardPerson, domIndex, itemInfo, startTime, endTime } = this.props;
+    const {
+      dispatch,
+      rewardPerson,
+      domIndex,
+      itemInfo,
+      startTime,
+      endTime,
+      sharerRewardInfo,
+      recipientRewardInfo,
+    } = this.props;
     const {
       target: { value },
     } = event;
@@ -48,19 +72,38 @@ class Coupon extends Component {
           data: { code, message: responseMessage },
           status,
         } = response;
-        console.log(response);
         if (status === 200) {
+          let resultValue = '';
+          let resultName = '';
+          let resultCount = 0;
           if (code === RESPONSE_CODE_ZERO) {
             const {
               data: {
                 result: { name, num },
               },
             } = response;
+            resultValue = this.deduplication(
+              itemInfo.rewardPerson ? recipientRewardInfo : sharerRewardInfo,
+              value
+            );
+            resultName = this.deduplication(
+              itemInfo.rewardPerson ? recipientRewardInfo : sharerRewardInfo,
+              name
+            );
+            resultCount = this.deduplication(
+              itemInfo.rewardPerson ? recipientRewardInfo : sharerRewardInfo,
+              num
+            );
             dispatch(
               updateRewardInfo({
                 rewardPerson: rewardPerson,
                 domIndex: domIndex,
-                updateList: { ...itemInfo, [COUPON_ID]: value, couponName: name, couponNum: num },
+                updateList: {
+                  ...itemInfo,
+                  [COUPON_ID]: resultValue,
+                  couponName: resultName,
+                  couponNum: resultCount,
+                },
                 option: 'update',
               })
             );
@@ -71,9 +114,9 @@ class Coupon extends Component {
                 domIndex: domIndex,
                 updateList: {
                   ...itemInfo,
-                  [COUPON_ID]: '',
+                  [COUPON_ID]: resultValue,
                   couponName: responseMessage,
-                  couponNum: 0,
+                  couponNum: resultCount,
                 },
                 option: 'update',
               })
@@ -92,7 +135,10 @@ class Coupon extends Component {
       updateRewardInfo({
         rewardPerson: rewardPerson,
         domIndex: domIndex,
-        updateList: { ...itemInfo, [keyName]: value },
+        updateList: {
+          ...itemInfo,
+          [keyName]: typeof value === 'number' ? Math.floor(value) : value,
+        },
         option: 'update',
       })
     );
@@ -121,7 +167,11 @@ class Coupon extends Component {
           {couponName === '' ? (
             <Fragment />
           ) : (
-            <Div styleStr={`color: red; margin: 0 30px;${SINGLE_LINE_OMITTED}; width: 280px;`}>
+            <Div
+              styleStr={`color: ${
+                couponId.length ? 'black' : 'red'
+              }; margin: 0 30px;${SINGLE_LINE_OMITTED}; width: 280px;`}
+            >
               <Tooltip placement="topLeft" title={couponName}>
                 {couponName}
               </Tooltip>
@@ -134,13 +184,14 @@ class Coupon extends Component {
             min={0}
             value={prizeQuotaDay}
             placeholder="请输入发放数量"
+            maxLength={18}
             style={{ width: '200px' }}
             onChange={value => this.updateValue(value, PRIZE_QUOTA_DAY)}
             disabled={disabled}
           />
           <Div styleStr={nameLimitStyle}>
             <Tooltip placement="topLeft" title={couponName}>
-              每天发放数量要大于等于总发放量且不能等于0
+              每天发放数量要小于等于总发放量且大于0
             </Tooltip>
           </Div>
         </Div>
@@ -150,17 +201,18 @@ class Coupon extends Component {
             min={0}
             value={prizeQuota}
             placeholder="请输入发放数量"
+            maxLength={18}
             style={{ width: '200px' }}
             onChange={value => this.updateValue(value, PRIZE_QUOTA)}
             disabled={disabled}
           />
           <Div styleStr={nameLimitStyle}>
             <Tooltip placement="topLeft" title={couponName}>
-              每天发放数量要小于等于总发放量且不能等于0
+              总发放数量要大于等于每天发放量且大于0
             </Tooltip>
           </Div>
         </Div>
-        {couponNum < prizeQuota ? (
+        {couponName !== '' && couponNum < prizeQuota ? (
           <Div styleStr={`color: red; margin: 0 30px;${SINGLE_LINE_OMITTED}; width: 280px;`}>
             <Tooltip placement="topLeft" title={`超过优惠券剩余总数，目前仅剩${couponNum}`}>
               {`超过优惠券剩余总数，目前仅剩${couponNum}`}
@@ -180,5 +232,7 @@ function mapStateToProps(state) {
   return {
     startTime: _.get(state, 'create.baseInfo.startTime', 0),
     endTime: _.get(state, 'create.baseInfo.endTime', 0),
+    sharerRewardInfo: _.get(state, 'create.rewardInfo.sharerRewardInfo', []),
+    recipientRewardInfo: _.get(state, 'create.rewardInfo.recipientRewardInfo', []),
   };
 }

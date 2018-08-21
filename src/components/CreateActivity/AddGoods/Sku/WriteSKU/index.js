@@ -11,8 +11,7 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Div } from '../../../../common/Div';
-import { Input, Upload, Button, Icon, message, notification } from 'antd';
-// import reqwest from 'reqwest';
+import { Input, Upload, Button, Icon, message, Row } from 'antd';
 import _ from 'lodash';
 import { checkSkuId } from '../../../../../utils/api-service';
 import { RESPONSE_CODE_ZERO, RESPONSE_CODE_FOUR } from '../../../../../consts/api';
@@ -58,25 +57,42 @@ class WriteSKU extends Component {
         } else if (code === RESPONSE_CODE_FOUR) {
           const pop = result.pop ? result.pop : null;
           const activityFails = result.activityFails ? result.activityFails : null;
+          const repeatData = result.repeatData ? result.repeatData : null;
           const skusNotSelf = result.skusNotSelf ? result.skusNotSelf : null;
-          notification.open({
-            message: responseMessage,
-            description: (
-              <Div>
-                {pop ? <Div styleStr={'color:red'}>非自营sku:{pop.join()}</Div> : <Fragment />}
-                {activityFails ? (
-                  <Div styleStr={'color:red'}>sku正在参加其他活动:{activityFails.join()}</Div>
-                ) : (
-                  <Fragment />
-                )}
-                {skusNotSelf ? (
-                  <Div styleStr={'color:red'}>不是自己管理的sku:{skusNotSelf.join()}</Div>
-                ) : (
-                  <Fragment />
-                )}
-              </Div>
-            ),
-          });
+          message.warning(
+            <Fragment>
+              {responseMessage}，
+              {pop ? (
+                <Div styleStr={'color:red; max-width:400px; font-size: 12px;'}>
+                  非自营sku:{pop.join()}
+                </Div>
+              ) : (
+                <Fragment />
+              )}
+              {activityFails ? (
+                <Div styleStr={'color:red; max-width:400px; font-size: 12px;'}>
+                  sku正在参加其他活动:{activityFails.join()}
+                </Div>
+              ) : (
+                <Fragment />
+              )}
+              {repeatData ? (
+                <Div styleStr={'color:red; max-width:400px; font-size: 12px;'}>
+                  重复的sku数据:{repeatData.join()}
+                </Div>
+              ) : (
+                <Fragment />
+              )}
+              {skusNotSelf ? (
+                <Div styleStr={'color:red; max-width:400px; font-size: 12px;'}>
+                  不是自己管理的sku:{skusNotSelf.join()}
+                </Div>
+              ) : (
+                <Fragment />
+              )}
+            </Fragment>,
+            5
+          );
           dispatch(changeAddGoods(IS_RESPONSE, false));
         } else {
           message.error(responseMessage);
@@ -95,17 +111,22 @@ class WriteSKU extends Component {
         dispatch(changeAddGoods(SKU_FILE, []));
       },
       beforeUpload: (file, fileList) => {
-        if (file.type !== 'text/plain') {
-          message.error('请上传txt格式的文件');
-          dispatch(changeAddGoods(SKU_FILE, []));
+        // 小于2M
+        if (file.size > 1 * 1024 * 1000) {
+          message.error('请上传文件大小小于1M的txt格式文件');
         } else {
-          if (fileList.length > 1) {
-            fileList = fileList.splice(0, 1);
-            dispatch(changeAddGoods(SKU_FILE, fileList));
+          if (file.type !== 'text/plain') {
+            message.error('请上传txt格式的文件');
+            dispatch(changeAddGoods(SKU_FILE, []));
           } else {
-            dispatch(changeAddGoods(SKU_FILE, fileList));
+            if (fileList.length > 1) {
+              fileList = fileList.splice(0, 1);
+              dispatch(changeAddGoods(SKU_FILE, fileList));
+            } else {
+              dispatch(changeAddGoods(SKU_FILE, fileList));
+            }
+            dispatch(changeAddGoods(WRITE_BIZIDS, ''));
           }
-          dispatch(changeAddGoods(WRITE_BIZIDS, ''));
         }
         return false;
       },
@@ -113,21 +134,24 @@ class WriteSKU extends Component {
     };
 
     return (
-      <Div>
+      <Fragment>
         <TextArea
           rows={4}
           value={writeBizids}
-          placeholder="请输入SKU编号，多个id用英文分割符隔开"
+          placeholder="请输入SKU编号，多个id用英文逗号隔开"
           onChange={event => this.handleChange(event)}
         />
-        <div>
+        <Div>
           <Upload {...props}>
             <Button>
               <Icon type="upload" /> 选择文件
             </Button>
           </Upload>
-        </div>
-      </Div>
+          <Row span={8} style={{ color: 'red', alignItems: 'center', margin: '15px' }}>
+            温馨提示：TXT格式，一行一个SKU展示，sku后面不能用任何分隔符，多个换行，输入10万个以内
+          </Row>
+        </Div>
+      </Fragment>
     );
   }
 }

@@ -43,7 +43,7 @@ class RewardType extends Component {
         updateList:
           value === JBEAN_TYPE
             ? {
-                rewardPerson: 0, //奖励人：0:分享者，1:被分享者
+                rewardPerson: rewardPerson, //奖励人：0:分享者，1:被分享者
                 rewardType: 5, //奖励类型：1:优惠券，2:京豆，3:店铺积分,4:自营优惠券，5自营京豆
                 prizeQuota: 1, //奖品总量
                 prizeQuotaDay: 1, //每天发放奖品总量
@@ -58,7 +58,7 @@ class RewardType extends Component {
                 JBeanNum: 0,
               }
             : {
-                rewardPerson: 0, //奖励人：0:分享者，1:被分享者
+                rewardPerson: rewardPerson, //奖励人：0:分享者，1:被分享者
                 rewardType: 4, //奖励类型：1:优惠券，2:京豆，3:店铺积分,4:自营优惠券，5自营京豆
                 couponId: '', //优惠券id/优惠券key
                 prizeQuota: 1, //奖品总量

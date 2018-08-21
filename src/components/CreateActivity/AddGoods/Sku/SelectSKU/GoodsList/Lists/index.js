@@ -31,8 +31,18 @@ class GoodsList extends Component {
     super(props);
     this.state = {
       visible: false,
+      loading: true,
     };
   }
+
+  componentDidMount() {
+    const { dispatch, filterParams } = this.props;
+    dispatch(requestGoodsList(GOODS_LIST_OBJECT, filterParams, this.changeState));
+  }
+
+  changeState = value => {
+    this.setState({ loading: value });
+  };
 
   selectGoods = (event, item) => {
     const {
@@ -77,24 +87,31 @@ class GoodsList extends Component {
       dispatch,
       filterParams,
     } = this.props;
+    const { loading } = this.state;
     return (
       <Fragment>
         <List
+          loading={loading}
           grid={{ gutter: 16, column: 4 }}
           dataSource={data}
           pagination={{
             onChange: (pageNo, pageSize = 8) => {
+              this.setState({ loading: true });
               dispatch(
-                requestGoodsList(GOODS_LIST_OBJECT, {
-                  ...filterParams,
-                  ...{ pageNo: pageNo, pageSize: pageSize },
-                })
+                requestGoodsList(
+                  GOODS_LIST_OBJECT,
+                  {
+                    ...filterParams,
+                    ...{ pageNo: pageNo, pageSize: pageSize },
+                  },
+                  this.changeState
+                )
               );
-              console.log(pageNo, pageSize);
             },
             current: pageNo,
             pageSize: pageSize,
             total: totalItem,
+            showQuickJumper: true,
           }}
           renderItem={item => (
             <List.Item>

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Card, Button } from 'antd';
-import DateRange from './DateRange';
 
 class FilterCard extends Component {
   constructor(props) {
@@ -11,7 +10,6 @@ class FilterCard extends Component {
   render() {
     return (
       <Card>
-        <DateRange />
         <Button>近7天</Button>
         <Button>近15天</Button>
         <Button>近30天</Button>

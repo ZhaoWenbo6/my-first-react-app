@@ -1,8 +1,7 @@
 import { createPayloadAction } from '../../utils/actionHelper';
 
 export function changeActivityDetailsValue(type, payload) {
-  return (dispatch, getState) => {
-    console.log(getState());
+  return dispatch => {
     dispatch(createPayloadAction(type, payload));
   };
 }

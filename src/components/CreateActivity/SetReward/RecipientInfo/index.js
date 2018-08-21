@@ -12,9 +12,9 @@ class RecipientInfo extends Component {
   }
 
   addReward = () => {
-    const { dispatch, rewardPerson, recipientRewardInfo } = this.props;
+    const { dispatch, recipientRewardInfo } = this.props;
     const module = {
-      rewardPerson: 0, //奖励人：0:分享者，1:被分享者
+      rewardPerson: 1, //奖励人：0:分享者，1:被分享者
       rewardType: 4, //奖励类型：1:优惠券，2:京豆，3:店铺积分,4:自营优惠券，5自营京豆
       couponId: '', //优惠券id/优惠券key
       prizeQuota: 0, //奖品总量
@@ -27,7 +27,7 @@ class RecipientInfo extends Component {
     if (recipientRewardInfo.length < 5) {
       dispatch(
         updateRewardInfo({
-          rewardPerson: rewardPerson,
+          rewardPerson: 1,
           updateList: module,
           option: 'add',
         })
@@ -37,8 +37,53 @@ class RecipientInfo extends Component {
     }
   };
 
+  checkButton = () => {
+    let isDisable = true;
+    const { recipientRewardInfo } = this.props;
+    recipientRewardInfo.map(item => {
+      if (item.rewardType === 4) {
+        const { couponId, couponName, couponNum, prizeQuota, prizeQuotaDay } = item;
+        isDisable =
+          isDisable &&
+          couponId !== '' &&
+          couponName !== '' &&
+          prizeQuota !== 0 &&
+          prizeQuotaDay !== 0 &&
+          couponNum >= prizeQuota &&
+          prizeQuotaDay <= prizeQuota;
+      } else if (item.rewardType === 5) {
+        const {
+          businessCode,
+          callerCode,
+          key,
+          orgId,
+          prizeQuotaTime,
+          secondBusinessId,
+          topBusinessId,
+          JBeanNum,
+        } = item;
+        isDisable =
+          isDisable &&
+          businessCode !== '' &&
+          callerCode !== '' &&
+          key !== '' &&
+          orgId !== '' &&
+          secondBusinessId !== '' &&
+          topBusinessId !== '' &&
+          item.prizeQuota * prizeQuotaTime <= JBeanNum &&
+          item.prizeQuota !== 0 &&
+          item.prizeQuotaDay !== 0 &&
+          prizeQuotaTime &&
+          item.prizeQuota &&
+          JBeanNum !== 0;
+      }
+    });
+    return !isDisable;
+  };
+
   render() {
-    const { recipientRewardInfo, rewardPerson, disabled } = this.props;
+    const isDisable = this.checkButton();
+    const { recipientRewardInfo, disabled } = this.props;
     return (
       <Div>
         <h2>2.设置被分享者信息</h2>
@@ -49,7 +94,7 @@ class RecipientInfo extends Component {
               key={item.random}
               domIndex={index}
               itemInfo={item}
-              rewardPerson={rewardPerson}
+              rewardPerson={1}
               disabled={disabled}
               disabledJBean={
                 recipientRewardInfo.filter(item => item.rewardType === 5).length > 0 ? true : false
@@ -61,7 +106,7 @@ class RecipientInfo extends Component {
         {disabled ? (
           <Fragment />
         ) : (
-          <Button type="primary" onClick={() => this.addReward()}>
+          <Button disabled={isDisable} type="primary" onClick={() => this.addReward()}>
             新增奖励
           </Button>
         )}

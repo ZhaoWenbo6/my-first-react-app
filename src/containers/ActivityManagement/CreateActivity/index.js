@@ -102,7 +102,7 @@ class CreateActivity extends Component {
             <Button
               style={{ margin: '0 10px' }}
               type="primary"
-              onClick={() => this.onClickHandle()}
+              onClick={_.throttle(this.onClickHandle, 10000, { trailing: false })}
             >
               完成
             </Button>

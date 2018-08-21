@@ -24,6 +24,9 @@ const selectedGoodsList = handleAction(SELECTED_GOODS_LIST, returnPayload, {});
 export const GOODS_NAME = 'GOODS_NAME';
 const goodsName = handleAction(GOODS_NAME, returnPayload, '');
 
+export const GOODS_SKU = 'GOODS_SKU';
+const goodsSKU = handleAction(GOODS_SKU, returnPayload, '');
+
 export const GOODS_FIRST_CLASSIFICATION = 'GOODS_FIRST_CLASSIFICATION';
 const goodsFirstClassification = handleAction(GOODS_FIRST_CLASSIFICATION, returnPayload, []);
 
@@ -68,6 +71,7 @@ export default combineReducers({
   goodsListObject,
   selectedGoodsList,
   goodsName,
+  goodsSKU,
   goodsFirstClassification,
   goodsSecondClassification,
   goodsThirdClassification,

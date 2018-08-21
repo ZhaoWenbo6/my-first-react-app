@@ -6,12 +6,16 @@ import RewardRule from '../../../components/common/RewardRule';
 import { getActivityDetails } from '../../../utils/api-service';
 import _ from 'lodash';
 import { changeActivityDetailsValue } from '../../../actions/ActivityDetails';
-import { ACTIVITY_DETAILS, ACTIVITY_CHECK_FLOW } from '../../../reducer/ActivityDetails';
+import {
+  ACTIVITY_DETAILS,
+  ACTIVITY_CHECK_FLOW,
+  ACTIVITY_ID,
+} from '../../../reducer/ActivityDetails';
 import { message, Spin } from 'antd';
 import { encodeSearchParams } from '../../../utils/spliceUrl';
 import { ACTIVITY_DETAILS_EXPORT } from '../../../consts/api';
-import { ACTIVITY_ID } from '../../../reducer/ActivityList';
 import CheckFlow from './CheckFlow';
+import { Div } from '../../../components/common/Div';
 
 class ActivityDetails extends Component {
   static displayName = 'ActivityDetails';
@@ -36,7 +40,6 @@ class ActivityDetails extends Component {
         message.error(responseMessage);
         this.setState({ spinning: true });
       }
-      console.log(response);
     });
   }
 
@@ -63,6 +66,7 @@ class ActivityDetails extends Component {
         shareRewardLimitDay = 0,
         viewRewardLimit = 0,
         viewRewardLimitDay = 0,
+        uploadOver = 0,
       },
       activityDetails = {},
       activityCheckFlow,
@@ -73,9 +77,13 @@ class ActivityDetails extends Component {
         <Title>1.活动基本信息</Title>
         <BaseInfo data={activityDetails} isDetails={true} />
         <Title>2.业务编号</Title>
-        <a onClick={() => this.exportData(activityDetails.id, activityDetails.activityType)}>
-          点击下载
-        </a>
+        {uploadOver ? (
+          <Div>上传中，预计5分钟后传完</Div>
+        ) : (
+          <a onClick={() => this.exportData(activityDetails.id, activityDetails.activityType)}>
+            点击下载
+          </a>
+        )}
         <Title>3.奖励信息</Title>
         <RewardRule
           sharerRewardInfo={shareRuleList.filter(item => item.rewardPerson === 0)}

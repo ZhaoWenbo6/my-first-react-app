@@ -26,6 +26,8 @@ class RewardRule extends Component {
           disabled={disabled}
         />
         <RewardLimit
+          sharerRewardInfo={sharerRewardInfo}
+          recipientRewardInfo={recipientRewardInfo}
           shareRewardLimit={shareRewardLimit}
           shareRewardLimitDay={shareRewardLimitDay}
           viewRewardLimit={viewRewardLimit}

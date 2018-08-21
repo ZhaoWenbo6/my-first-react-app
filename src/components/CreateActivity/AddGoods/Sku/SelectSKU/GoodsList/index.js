@@ -16,7 +16,7 @@ import { Div } from '../../../../../common/Div';
 import { Title } from '../../../../../common/Title';
 import Lists from './Lists';
 import {
-  requestGoodsList,
+  // requestGoodsList,
   changeAddGoods,
 } from '../../../../../../actions/CreateActivity/addGoods';
 import {
@@ -33,12 +33,8 @@ class GoodsList extends Component {
     super(props);
     this.state = {
       visible: false,
+      loading: true,
     };
-  }
-
-  componentDidMount() {
-    const { dispatch, filterParams } = this.props;
-    dispatch(requestGoodsList(GOODS_LIST_OBJECT, filterParams));
   }
 
   showModal = () => {
@@ -47,8 +43,7 @@ class GoodsList extends Component {
     });
   };
 
-  handleCancel = e => {
-    console.log(e);
+  handleCancel = () => {
     this.setState({
       visible: false,
     });
@@ -63,7 +58,7 @@ class GoodsList extends Component {
       selectedGoodsList: { data: selectedData = [] },
       goodsListObject,
     } = this.props;
-    const resultList = selectedData;
+    let resultList = selectedData;
     const { data: goodsListData = [] } = goodsListObject;
     const goodsList = goodsListData;
     let goodsResultList = [];
@@ -71,16 +66,21 @@ class GoodsList extends Component {
       goodsResultList = goodsList.map(beforeItem => {
         if (!beforeItem.isChecked) {
           beforeItem.isChecked = true;
-          resultList.push({ ...beforeItem });
+          if (!beforeItem.used) {
+            resultList.push({ ...beforeItem });
+          }
         }
         return beforeItem;
       });
     } else {
       goodsResultList = goodsList.map(beforeItem => {
         if (beforeItem.isChecked) {
-          const index = resultList.indexOf(beforeItem);
-          resultList.splice(index, 1);
+          const index = resultList.map(item => item.sku).indexOf(beforeItem.sku);
+          resultList.splice(index, 1, '');
+          resultList = resultList.filter(item => item !== '');
           beforeItem.isChecked = false;
+          return beforeItem;
+        } else if (beforeItem.used) {
           return beforeItem;
         }
       });
@@ -94,7 +94,7 @@ class GoodsList extends Component {
       goodsListObject: { data },
     } = this.props;
     if (data) {
-      return !(data.filter(item => item.isChecked === false).length > 0);
+      return !(data.filter(item => !item.used && item.isChecked === false).length > 0);
     } else {
       return false;
     }
@@ -137,13 +137,29 @@ class GoodsList extends Component {
     dispatch(changeAddGoods(SELECTED_GOODS_LIST, { data: resultList }));
   };
 
+  isDisable = () => {
+    const {
+      goodsListObject: { data },
+    } = this.props;
+    if (data) {
+      if (data.length === data.filter(item => item.used === true).length) {
+        return true;
+      }
+    }
+    return false;
+  };
+
   render() {
     const { goodsListObject, selectedGoodsList, filterParams } = this.props;
     return (
       <Div styleStr={containerStr}>
         <Lists data={goodsListObject} filterParams={filterParams} />
         <Title>
-          <Checkbox checked={this.isChecked()} onChange={event => this.selectAll(event)}>
+          <Checkbox
+            disabled={this.isDisable()}
+            checked={this.isChecked()}
+            onChange={event => this.selectAll(event)}
+          >
             全选
           </Checkbox>
           <Button type="primary" style={{ margin: '0  10px' }} onClick={() => this.showModal()}>

@@ -9,8 +9,7 @@ import { resetRewardInfo } from './rewardInfo';
 import { resetQueryFilter } from '../ActivityList';
 
 export function changeCurrentStep(type, payload) {
-  return (dispatch, getState) => {
-    console.log(getState());
+  return dispatch => {
     dispatch(createPayloadAction(type, payload));
   };
 }
@@ -34,7 +33,7 @@ export function checkSecondData(stateObj) {
     writeBizids,
     isResponse,
     matchType,
-    towerSkuFile,
+    // towerSkuFile,
     writeTowerBizids,
     isTowerResponse,
   } = stateObj;
@@ -47,7 +46,8 @@ export function checkSecondData(stateObj) {
       }
       break;
     case 4:
-      isDisable = towerSkuFile.length > 0 && (isTowerResponse && writeTowerBizids.length > 0);
+      // isDisable = towerSkuFile.length > 0 && (isTowerResponse && writeTowerBizids.length > 0); //todo 因分享中心未上线，顾注释
+      isDisable = isTowerResponse && writeTowerBizids.length > 0;
       break;
     default:
       break;
@@ -122,8 +122,8 @@ export function checkThirdData(stateObj) {
         prizeQuota !== 0 &&
         prizeQuotaDay !== 0 &&
         couponNum >= prizeQuota &&
-        prizeQuotaDay <= prizeQuota &&
-        viewRewardLimitCount.push(prizeQuota);
+        prizeQuotaDay <= prizeQuota;
+      viewRewardLimitCount.push(prizeQuota);
       viewRewardLimitDayCount.push(prizeQuotaDay);
     } else if (item.rewardType === 5) {
       const {
@@ -173,7 +173,6 @@ export function checkThirdData(stateObj) {
 
 export function splicCreateActivityParameters() {
   return (dispatch, getState) => {
-    console.log(getState());
     const {
       baseInfo,
       addGoods: {
@@ -182,7 +181,7 @@ export function splicCreateActivityParameters() {
         selectedGoodsList: { data },
         skuFile,
         writeBizids,
-        towerSkuFile,
+        // towerSkuFile,
         writeTowerBizids,
       },
       rewardInfo,
@@ -214,7 +213,7 @@ export function splicCreateActivityParameters() {
         break;
       case 4:
         secondParams = { bizIds: writeTowerBizids };
-        formData.append('activityImge', towerSkuFile[0]);
+        // formData.append('activityImge', towerSkuFile[0]); //todo 因分享中心未上线，顾注释
         break;
       default:
         break;
@@ -243,18 +242,16 @@ export function requestAddActivity(params) {
       if (status === 200) {
         if (code === '0') {
           message.success('活动创建成功');
-          dispatch(resetCreateState());
           dispatch(resetQueryFilter());
           routeHistory.push(ACTIVITY_LIST);
+          dispatch(resetCreateState());
         } else {
           message.error(responseMessage);
         }
       } else {
         message.error(`请求异常：状态码为${status}`);
       }
-      console.log(response);
     });
-    console.log(getState());
   };
 }
 
@@ -264,6 +261,7 @@ export function resetCreateState() {
     dispatch(resetBaseInfo());
     dispatch(resetAddGoods());
     dispatch(resetRewardInfo());
+    // dispatch(resetQueryFilter()); // 重置活动列表页筛选状态
   };
 }
 

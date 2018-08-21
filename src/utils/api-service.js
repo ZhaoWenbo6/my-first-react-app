@@ -10,7 +10,7 @@
  */
 import axios from 'axios';
 import * as apiSchema from './api-schema';
-import LOGOUT_PAGE from '../consts/url';
+import { LOGOUT_PAGE } from '../consts/url';
 
 let shareService;
 export function initRemote(serviceUrl = '') {
@@ -22,26 +22,26 @@ export function initRemote(serviceUrl = '') {
       accept: 'application/vnd.api+json',
     },
   });
-}
 
-// 添加响应拦截器
-axios.interceptors.response.use(
-  function(response) {
-    // api请求302重定向处理，重定向api返回的data是登陆页面的代码
-    const { data, status } = response;
-    if (status === 200 && typeof data === 'object') {
+  // 添加响应拦截器
+  shareService.interceptors.response.use(
+    function(response) {
+      // api请求302重定向处理，重定向api返回的data是登陆页面的代码
+      const { data, status } = response;
+      if (status === 200 && typeof data === 'object') {
+        return response;
+      } else {
+        window.location.href = LOGOUT_PAGE;
+      }
       return response;
-    } else {
+    },
+    function(error) {
+      // 异常处理
       window.location.href = LOGOUT_PAGE;
+      return Promise.reject(error);
     }
-    return response;
-  },
-  function(error) {
-    // 异常处理
-    window.location.href = LOGOUT_PAGE;
-    return Promise.reject(error);
-  }
-);
+  );
+}
 
 function makeService(service, api = {}) {
   // todo cache support and connect to redux state

@@ -10,13 +10,12 @@
  */
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Radio, Card, Input, Button, message } from 'antd';
+import { Radio, Card, Input, Button, message, Tooltip } from 'antd';
 import _ from 'lodash';
 import { MARGIN_TEN_ZERO, FLEX_START_CENTER, FLEX_CENTER_CENTER } from '../../../../consts/css';
 import { Div } from '../../../../components/common/Div';
 import { ACTIVITY_LIST } from '../../../../consts/route';
-import { ACTIVITY_ID } from '../../../../reducer/ActivityList';
-import { ACTIVITY_CHECK_FLOW } from '../../../../reducer/ActivityDetails';
+import { ACTIVITY_CHECK_FLOW, ACTIVITY_ID } from '../../../../reducer/ActivityDetails';
 import { changeActivityDetailsValue } from '../../../../actions/ActivityDetails';
 import { submitCheckFlow } from '../../../../utils/api-service';
 import { requestActivityListInfo } from '../../../../actions/ActivityList';
@@ -45,7 +44,7 @@ class RewardType extends Component {
     const {
       target: { value },
     } = event;
-    this.setState({ radioValue: value });
+    this.setState({ radioValue: value, opinionStr: '' });
   };
 
   opinion = event => {
@@ -63,7 +62,6 @@ class RewardType extends Component {
       checkResult: radioValue,
       checkMessage: radioValue === 2 ? opinionStr : null,
     }).then(response => {
-      console.log(response);
       const {
         data: { code, message: responseMessage },
         status,
@@ -80,13 +78,22 @@ class RewardType extends Component {
 
   render() {
     const { radioValue, opinionStr } = this.state;
+    const nameLimitStyle = `color: red; margin-left: 100px; visibility:${
+      opinionStr.length !== 30 ? 'hidden' : 'visible'
+    }`;
     const arr = [
       { content: <Fragment /> },
       {
         content: (
           <Div styleStr={FLEX_START_CENTER}>
             <Div styleStr={'width: 100px;'}>审批意见：</Div>
-            <TextArea rows={4} onChange={event => this.opinion(event)} value={opinionStr} />
+            <TextArea
+              placeholder="输入审批意见，30字以内"
+              rows={2}
+              maxLength={30}
+              onChange={event => this.opinion(event)}
+              value={opinionStr}
+            />
           </Div>
         ),
       },
@@ -101,8 +108,18 @@ class RewardType extends Component {
           </RadioGroup>
         </Div>
         <Div styleStr={MARGIN_TEN_ZERO}>{arr[radioValue - 1].content}</Div>
+        <Div styleStr={nameLimitStyle}>
+          <Tooltip placement="top" title={'审批意见在30字以内'}>
+            审批意见在30字以内
+          </Tooltip>
+        </Div>
         <Div styleStr={FLEX_CENTER_CENTER}>
-          <Button type="primary" style={{ margin: '10px' }} onClick={() => this.submit()}>
+          <Button
+            disabled={radioValue === 2 ? (opinionStr === '' ? true : false) : false}
+            type="primary"
+            style={{ margin: '10px' }}
+            onClick={() => this.submit()}
+          >
             提交审批
           </Button>
         </Div>
