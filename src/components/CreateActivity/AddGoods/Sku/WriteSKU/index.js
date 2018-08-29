@@ -38,7 +38,7 @@ class WriteSKU extends Component {
     event.persist();
     const { value } = event.target;
     dispatch(changeAddGoods(IS_RESPONSE, false));
-    dispatch(changeAddGoods(WRITE_BIZIDS, value));
+    dispatch(changeAddGoods(WRITE_BIZIDS, value.trim()));
     dispatch(changeAddGoods(SKU_FILE, []));
     this.emitChangeDebounced(event);
   };
@@ -46,62 +46,72 @@ class WriteSKU extends Component {
   emitChange = event => {
     const { value } = event.target;
     const { dispatch, startTime, endTime } = this.props;
-    checkSkuId({ skuIds: value, startDate: startTime, endDate: endTime }).then(response => {
-      dispatch(changeAddGoods(IS_RESPONSE, true));
-      if (response.status === 200) {
-        const { code, message: responseMessage, result } = response.data;
-        if (code === RESPONSE_CODE_ZERO) {
-          dispatch(changeAddGoods(IS_RESPONSE, true));
-          dispatch(changeAddGoods(WRITE_BIZIDS, value));
-          message.success('输入的skuId均有效');
-        } else if (code === RESPONSE_CODE_FOUR) {
-          const pop = result.pop ? result.pop : null;
-          const activityFails = result.activityFails ? result.activityFails : null;
-          const repeatData = result.repeatData ? result.repeatData : null;
-          const skusNotSelf = result.skusNotSelf ? result.skusNotSelf : null;
-          message.warning(
-            <Fragment>
-              {responseMessage}，
-              {pop ? (
-                <Div styleStr={'color:red; max-width:400px; font-size: 12px;'}>
-                  非自营sku:{pop.join()}
-                </Div>
-              ) : (
-                <Fragment />
-              )}
-              {activityFails ? (
-                <Div styleStr={'color:red; max-width:400px; font-size: 12px;'}>
-                  sku正在参加其他活动:{activityFails.join()}
-                </Div>
-              ) : (
-                <Fragment />
-              )}
-              {repeatData ? (
-                <Div styleStr={'color:red; max-width:400px; font-size: 12px;'}>
-                  重复的sku数据:{repeatData.join()}
-                </Div>
-              ) : (
-                <Fragment />
-              )}
-              {skusNotSelf ? (
-                <Div styleStr={'color:red; max-width:400px; font-size: 12px;'}>
-                  不是自己管理的sku:{skusNotSelf.join()}
-                </Div>
-              ) : (
-                <Fragment />
-              )}
-            </Fragment>,
-            5
-          );
-          dispatch(changeAddGoods(IS_RESPONSE, false));
+    if (value !== '') {
+      checkSkuId({ skuIds: value, startDate: startTime, endDate: endTime }).then(response => {
+        dispatch(changeAddGoods(IS_RESPONSE, true));
+        if (response.status === 200) {
+          const { code, message: responseMessage, result } = response.data;
+          if (code === RESPONSE_CODE_ZERO) {
+            dispatch(changeAddGoods(IS_RESPONSE, true));
+            dispatch(changeAddGoods(WRITE_BIZIDS, value));
+            message.success('输入的skuId均有效');
+          } else if (code === RESPONSE_CODE_FOUR) {
+            const pop = result.pop ? result.pop : null;
+            const activityFails = result.activityFails ? result.activityFails : null;
+            const repeatData = result.repeatData ? result.repeatData : null;
+            const skusNotSelf = result.skusNotSelf ? result.skusNotSelf : null;
+            message.warning(
+              <Fragment>
+                {responseMessage}，
+                {pop ? (
+                  <Div
+                    styleStr={'color:red; max-width:400px; font-size: 12px; word-wrap: break-word;'}
+                  >
+                    非自营sku:{pop.join()}
+                  </Div>
+                ) : (
+                  <Fragment />
+                )}
+                {activityFails ? (
+                  <Div
+                    styleStr={'color:red; max-width:400px; font-size: 12px; word-wrap: break-word;'}
+                  >
+                    sku正在参加其他活动:{activityFails.join()}
+                  </Div>
+                ) : (
+                  <Fragment />
+                )}
+                {repeatData ? (
+                  <Div
+                    styleStr={'color:red; max-width:400px; font-size: 12px; word-wrap: break-word;'}
+                  >
+                    重复的sku数据:{repeatData.join()}
+                  </Div>
+                ) : (
+                  <Fragment />
+                )}
+                {skusNotSelf ? (
+                  <Div
+                    styleStr={'color:red; max-width:400px; font-size: 12px; word-wrap: break-word;'}
+                  >
+                    不是自己管理的sku:{skusNotSelf.join()}
+                  </Div>
+                ) : (
+                  <Fragment />
+                )}
+              </Fragment>,
+              5
+            );
+            dispatch(changeAddGoods(IS_RESPONSE, false));
+          } else {
+            message.error(responseMessage);
+            dispatch(changeAddGoods(IS_RESPONSE, false));
+          }
         } else {
-          message.error(responseMessage);
-          dispatch(changeAddGoods(IS_RESPONSE, false));
+          message.error('网络连接失败');
         }
-      } else {
-        message.error('网络连接失败');
-      }
-    });
+      });
+    }
   };
 
   render() {

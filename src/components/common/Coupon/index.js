@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { InputNumber, Card, message, Input, Tooltip } from 'antd';
+import { InputNumber, Card, message, Input } from 'antd';
 import { Div } from '../Div';
 import { FLEX_START_CENTER } from '../../../consts/css';
 import { updateRewardInfo } from '../../../actions/CreateActivity/rewardInfo';
@@ -40,6 +40,15 @@ class Coupon extends Component {
   };
 
   deduplication = (arr, value) => {
+    if (arr.filter(item => item.couponId.toLowerCase() === value.toLowerCase()).length > 1) {
+      message.warning('输入优惠券Key重复');
+      return '';
+    } else {
+      return value;
+    }
+  };
+
+  deduplicationNumber = (arr, value) => {
     if (arr.filter(item => item.couponId === value).length > 1) {
       message.warning('输入优惠券Key重复');
       return '';
@@ -90,7 +99,7 @@ class Coupon extends Component {
               itemInfo.rewardPerson ? recipientRewardInfo : sharerRewardInfo,
               name
             );
-            resultCount = this.deduplication(
+            resultCount = this.deduplicationNumber(
               itemInfo.rewardPerson ? recipientRewardInfo : sharerRewardInfo,
               num
             );
@@ -172,9 +181,9 @@ class Coupon extends Component {
                 couponId.length ? 'black' : 'red'
               }; margin: 0 30px;${SINGLE_LINE_OMITTED}; width: 280px;`}
             >
-              <Tooltip placement="topLeft" title={couponName}>
-                {couponName}
-              </Tooltip>
+              {/*<Tooltip placement="topLeft" title={couponName}>*/}
+              {couponName}
+              {/*</Tooltip>*/}
             </Div>
           )}
         </Div>
@@ -190,9 +199,9 @@ class Coupon extends Component {
             disabled={disabled}
           />
           <Div styleStr={nameLimitStyle}>
-            <Tooltip placement="topLeft" title={couponName}>
-              每天发放数量要小于等于总发放量且大于0
-            </Tooltip>
+            {/*<Tooltip placement="topLeft" title={couponName}>*/}
+            每天发放数量要小于等于总发放量且大于0
+            {/*</Tooltip>*/}
           </Div>
         </Div>
         <Div styleStr={`${FLEX_START_CENTER}; margin: 0 10px 10px`}>
@@ -207,16 +216,16 @@ class Coupon extends Component {
             disabled={disabled}
           />
           <Div styleStr={nameLimitStyle}>
-            <Tooltip placement="topLeft" title={couponName}>
-              总发放数量要大于等于每天发放量且大于0
-            </Tooltip>
+            {/*<Tooltip placement="topLeft" title={couponName}>*/}
+            总发放数量要大于等于每天发放量且大于0
+            {/*</Tooltip>*/}
           </Div>
         </Div>
         {couponName !== '' && couponNum < prizeQuota ? (
           <Div styleStr={`color: red; margin: 0 30px;${SINGLE_LINE_OMITTED}; width: 280px;`}>
-            <Tooltip placement="topLeft" title={`超过优惠券剩余总数，目前仅剩${couponNum}`}>
-              {`超过优惠券剩余总数，目前仅剩${couponNum}`}
-            </Tooltip>
+            {/*<Tooltip placement="topLeft" title={`超过优惠券剩余总数，目前仅剩${couponNum}`}>*/}
+            {`超过优惠券剩余总数，目前仅剩${couponNum}`}
+            {/*</Tooltip>*/}
           </Div>
         ) : (
           <Fragment />

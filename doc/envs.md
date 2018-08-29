@@ -6,14 +6,8 @@
 * development: 开发环境
 
 
-## LOCAL_DEV
+## DEPLOY_ENV
 
-* true
-* false
-
-## TARGET_ROLE
-
-用户分类
-
-* pop
-* static
+* beta: 预发环境
+* master: 线上环境
+* dev: 开发环境

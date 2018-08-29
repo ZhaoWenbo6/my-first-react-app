@@ -15,6 +15,8 @@ import {
   CID1_VALUE,
   CID2_VALUE,
   CID3_VALUE,
+  CID2,
+  CID3,
 } from '../../reducer/ActivityList';
 import { STRING_ZERO } from '../../consts/const';
 
@@ -39,6 +41,8 @@ export function resetQueryFilter() {
     dispatch(createPayloadAction(CID1_VALUE, '0')); //设置一级分类
     dispatch(createPayloadAction(CID2_VALUE, '0')); //恢复默认值
     dispatch(createPayloadAction(CID3_VALUE, '0')); //恢复默认值
+    dispatch(createPayloadAction(CID2, [])); //恢复默认值
+    dispatch(createPayloadAction(CID3, [])); //恢复默认值
   };
 }
 

@@ -34,9 +34,13 @@ class GoodsCodes extends Component {
       skusInfo,
     } = this.props;
     const bizIdsArr =
-      matchType === 1 ? (selectedType === 0 ? selectedGoodsList.data : writeBizids.split(',')) : [];
+      matchType === 1
+        ? selectedType === 0
+          ? selectedGoodsList.data
+          : writeBizids.split(',').filter(item => item !== '')
+        : [];
     if (selectedType) {
-      if (bizIdsArr[0] !== '') {
+      if (bizIdsArr[0] && bizIdsArr[0] !== '') {
         return (
           <Fragment>
             <div
@@ -142,7 +146,7 @@ class GoodsCodes extends Component {
     const {
       data: { writeTowerBizids },
     } = this.props;
-    const bizIdsArr = writeTowerBizids.split(',');
+    const bizIdsArr = writeTowerBizids.split(',').filter(item => item !== '');
     return (
       <Fragment>
         {/*<Card title={'已选图片'}>

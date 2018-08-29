@@ -78,17 +78,28 @@ class FilterCard extends Component {
   onChange = value => {
     const { dispatch } = this.props;
     dispatch(
-      changeActivityListValue(ACTIVITY_START_TIME, value.length ? moment(value[0]).valueOf() : 0)
+      changeActivityListValue(
+        ACTIVITY_START_TIME,
+        value.length ? Date.parse(new Date(moment(value[0]).valueOf())) : 0
+      )
     );
     dispatch(
-      changeActivityListValue(ACTIVITY_END_TIME, value.length ? moment(value[1]).valueOf() : 0)
+      changeActivityListValue(
+        ACTIVITY_END_TIME,
+        value.length ? Date.parse(new Date(moment(value[1]).valueOf())) : 0
+      )
     );
   };
 
   onChangeValue = (value, type) => {
     const { dispatch } = this.props;
     if (value !== undefined) {
-      dispatch(changeActivityListValue(type, value));
+      dispatch(
+        changeActivityListValue(
+          type,
+          type === ACTIVITY_LIST_ID ? (typeof value === 'number' ? value : '') : value
+        )
+      );
     }
   };
 
@@ -278,8 +289,8 @@ class FilterCard extends Component {
           </Col>
           <Col span={8}>
             <RangePicker
-              showTime={{ format: 'HH:mm' }}
-              format="YYYY-MM-DD HH:mm"
+              showTime={{ format: 'HH:mm:ss' }}
+              format="YYYY/MM/DD HH:mm:ss"
               placeholder={['开始时间', '结束时间']}
               onChange={(dates, dateString) => this.onChange(dates, dateString)}
               value={

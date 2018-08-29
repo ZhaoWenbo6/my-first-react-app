@@ -11,7 +11,7 @@ class BaseInfo extends Component {
 
   renderDetails = () => {
     const {
-      data: { titles, contents, auditStatus, createTime },
+      data: { titles, contents, auditStatus, createTime, activityType },
       isDetails,
     } = this.props;
     const renderDom = isDetails ? (
@@ -27,7 +27,13 @@ class BaseInfo extends Component {
             <Div styleStr={itemsStyles}>审核状态：</Div>
           </Col>
           <Col span={10}>
-            {auditStatus ? (auditStatus === 1 ? '审核通过' : '审核不通过') : '未审核'}
+            {auditStatus
+              ? auditStatus === 1
+                ? '审核通过'
+                : '审核不通过'
+              : activityType
+                ? '待审核'
+                : '—'}
           </Col>
         </Row>
         <Row style={{ margin: '0 10px 10px' }}>
@@ -51,13 +57,15 @@ class BaseInfo extends Component {
 
   render() {
     const {
-      data: { activityName, activityType, startTime, endTime },
+      data: { activityName, activityType, startTime, endTime, type },
       data,
+      isDetails,
     } = this.props;
     let {
       data: { activitySource },
     } = this.props;
     activitySource = activitySource ? activitySource : data.source;
+    const resultType = isDetails ? type : activityType;
     return (
       <Fragment>
         <Row style={{ margin: '0 10px 10px' }}>
@@ -70,9 +78,7 @@ class BaseInfo extends Component {
           <Col span={3}>
             <Div styleStr={itemsStyles}>活动入口：</Div>
           </Col>
-          <Col span={10}>
-            {activityType === 1 ? '商详' : activityType === 2 ? '店铺' : '通天塔'}
-          </Col>
+          <Col span={10}>{resultType === 1 ? '商详' : resultType === 2 ? '店铺' : '通天塔'}</Col>
         </Row>
         <Row style={{ margin: '0 10px 10px' }}>
           <Col span={3}>

@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Div } from '../../../common/Div';
-import { Card, InputNumber, Radio, Tooltip } from 'antd';
+import { Card, InputNumber, Radio } from 'antd';
 import { FLEX_COL_CENTER_START, MARGIN_TEN } from '../../../../consts/css';
 import { changeRewardInfo } from '../../../../actions/CreateActivity/rewardInfo';
 import {
@@ -124,18 +124,18 @@ class RewardLimit extends Component {
                 onChange={value => this.onChange(value, SHARE_REWARD_LIMIT)}
               />
               <Div styleStr={shareRewardLimitStyle}>
-                <Tooltip
+                {/*<Tooltip
                   placement="topLeft"
                   title={`应小于等于分享者最高奖池的数量${
                     shareRewardLimitCount.length > 0
                       ? shareRewardLimitCount.reduce((prev, next) => Math.max(prev, next))
                       : 0
                   }`}
-                >
-                  应小于等于分享者最高奖池的数量{shareRewardLimitCount.length > 0
-                    ? shareRewardLimitCount.reduce((prev, next) => Math.max(prev, next))
-                    : 0}
-                </Tooltip>
+                >*/}
+                应小于等于分享者最高奖池的数量{shareRewardLimitCount.length > 0
+                  ? shareRewardLimitCount.reduce((prev, next) => Math.max(prev, next))
+                  : 0}
+                {/*</Tooltip>*/}
               </Div>
             </Div>
             <h4>每天最高返利次数：</h4>
@@ -157,18 +157,18 @@ class RewardLimit extends Component {
                 onChange={value => this.onChange(value, SHARE_REWARD_LIMIT_DAY)}
               />
               <Div styleStr={shareRewardLimitDayStyle}>
-                <Tooltip
+                {/*<Tooltip
                   placement="topLeft"
                   title={`应小于等于分享者每日最高奖池的数量${
                     shareRewardLimitDayCount.length > 0
                       ? shareRewardLimitDayCount.reduce((prev, next) => Math.max(prev, next))
                       : 0
                   }`}
-                >
-                  应小于等于分享者每日最高奖池的数量{shareRewardLimitDayCount.length > 0
-                    ? shareRewardLimitDayCount.reduce((prev, next) => Math.max(prev, next))
-                    : 0}
-                </Tooltip>
+                >*/}
+                应小于等于分享者每日最高奖池的数量{shareRewardLimitDayCount.length > 0
+                  ? shareRewardLimitDayCount.reduce((prev, next) => Math.max(prev, next))
+                  : 0}
+                {/*</Tooltip>*/}
               </Div>
             </Div>
           </Div>
@@ -193,18 +193,18 @@ class RewardLimit extends Component {
                 onChange={value => this.onChange(value, VIEW_REWARD_LIMIT)}
               />
               <Div styleStr={viewRewardLimitStyle}>
-                <Tooltip
+                {/*<Tooltip
                   placement="topLeft"
                   title={`应小于等于被分享者最高奖池的数量${
                     viewRewardLimitCount.length > 0
                       ? viewRewardLimitCount.reduce((prev, next) => Math.max(prev, next))
                       : 0
                   }`}
-                >
-                  应小于等于被分享者最高奖池的数量{viewRewardLimitCount.length > 0
-                    ? viewRewardLimitCount.reduce((prev, next) => Math.max(prev, next))
-                    : 0}
-                </Tooltip>
+                >*/}
+                应小于等于被分享者最高奖池的数量{viewRewardLimitCount.length > 0
+                  ? viewRewardLimitCount.reduce((prev, next) => Math.max(prev, next))
+                  : 0}
+                {/*</Tooltip>*/}
               </Div>
             </Div>
             <h4>每天最高返利次数：</h4>
@@ -226,18 +226,18 @@ class RewardLimit extends Component {
                 onChange={value => this.onChange(value, VIEW_REWARD_LIMIT_DAY)}
               />
               <Div styleStr={viewRewardLimitDayStyle}>
-                <Tooltip
+                {/*<Tooltip
                   placement="topLeft"
                   title={`应小于等于被分享者每日最高奖池的数量${
                     viewRewardLimitDayCount.length > 0
                       ? viewRewardLimitDayCount.reduce((prev, next) => Math.max(prev, next))
                       : 0
                   }`}
-                >
-                  应小于等于被分享者每日最高奖池的数量{viewRewardLimitDayCount.length > 0
-                    ? viewRewardLimitDayCount.reduce((prev, next) => Math.max(prev, next))
-                    : 0}
-                </Tooltip>
+                >*/}
+                应小于等于被分享者每日最高奖池的数量{viewRewardLimitDayCount.length > 0
+                  ? viewRewardLimitDayCount.reduce((prev, next) => Math.max(prev, next))
+                  : 0}
+                {/*</Tooltip>*/}
               </Div>
             </Div>
           </Div>

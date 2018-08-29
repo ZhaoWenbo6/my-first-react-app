@@ -126,6 +126,7 @@ class GoodsList extends Component {
                 <Div styleStr={checkboxItemStr}>
                   <Tooltip
                     placement="top"
+                    trigger="hover"
                     title={item.used ? '该商品正在参与活动，故无法勾选' : ''}
                   >
                     <Checkbox

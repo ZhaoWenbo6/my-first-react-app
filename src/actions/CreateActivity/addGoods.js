@@ -49,12 +49,16 @@ export function resetAddGoods() {
     dispatch(changeAddGoods(WRITE_TOWER_BIZIDS, ''));
     dispatch(changeAddGoods(IS_TOWER_RESPONSE, false));
     dispatch(changeAddGoods(TOWER_SKU_FILE, []));
+    dispatch(changeAddGoods(GOODS_SKU, ''));
   };
 }
 
 export function resetQueryFilter() {
   return dispatch => {
     dispatch(createPayloadAction(GOODS_NAME, ''));
+    // dispatch(changeAddGoods(GOODS_FIRST_CLASSIFICATION, [])); //设置一级分类
+    dispatch(changeAddGoods(GOODS_SECOND_CLASSIFICATION, [])); //恢复默认值
+    dispatch(changeAddGoods(GOODS_THIRD_CLASSIFICATION, [])); //恢复默认值
     dispatch(changeAddGoods(FIRST_CLASSIFICATION, '0')); //设置一级分类
     dispatch(changeAddGoods(SECOND_CLASSIFICATION, '0')); //恢复默认值
     dispatch(changeAddGoods(THIRD_CLASSIFICATION, '0')); //恢复默认值

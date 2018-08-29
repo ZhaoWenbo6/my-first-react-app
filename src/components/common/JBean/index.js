@@ -176,9 +176,9 @@ class JBean extends Component {
             disabled={disabled}
           />
           <Div styleStr={nameLimitStyle}>
-            <Tooltip placement="topLeft" title={'每天发放数量要大于等于总发放量且不能等于0'}>
-              每天发放数量要小于等于总发放量且不能等于0
-            </Tooltip>
+            {/*<Tooltip placement="topLeft" title={'每天发放数量要大于等于总发放量且不能等于0'}>*/}
+            每天发放数量要小于等于总发放量且不能等于0
+            {/*</Tooltip>*/}
           </Div>
         </Div>
         <Div styleStr={`${FLEX_START_CENTER}; margin: 0 10px 10px`}>
@@ -195,15 +195,15 @@ class JBean extends Component {
           {!disabled ? (
             JBeanNum >= prizeQuota * prizeQuotaTime ? (
               <Div styleStr={nameLimitStyle}>
-                <Tooltip placement="topLeft" title={'总发放数量要大于等于每天发放量且大于0'}>
-                  总发放数量要大于等于每天发放量且大于0
-                </Tooltip>
+                {/*<Tooltip placement="topLeft" title={'总发放数量要大于等于每天发放量且大于0'}>*/}
+                总发放数量要大于等于每天发放量且大于0
+                {/*</Tooltip>*/}
               </Div>
             ) : (
               <Div styleStr={JBeanNumNameLimitStyle}>
-                <Tooltip placement="topLeft" title={`超过已有京豆数量，目前剩余${JBeanNum}个京豆`}>
-                  超过已有京豆数量，目前剩余{JBeanNum}个京豆
-                </Tooltip>
+                {/*<Tooltip placement="topLeft" title={`超过已有京豆数量，目前剩余${JBeanNum}个京豆`}>*/}
+                超过已有京豆数量，目前剩余{JBeanNum}个京豆
+                {/*</Tooltip>*/}
               </Div>
             )
           ) : (
@@ -280,8 +280,8 @@ class JBean extends Component {
           <Col span={8}>
             <Tooltip
               placement="topLeft"
-              title={() => <Div styleStr={'word-wrap: break-word'}>{key}</Div>}
-              visible={key.length}
+              title={key ? <Div styleStr={'word-wrap: break-word;'}>{key}</Div> : null}
+              // visible={key.length}
             >
               <Input
                 placeholder="请输入key"

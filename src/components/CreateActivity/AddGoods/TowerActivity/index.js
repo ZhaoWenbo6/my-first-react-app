@@ -28,7 +28,7 @@ class TowerActivity extends Component {
     event.persist();
     const { value } = event.target;
     dispatch(changeAddGoods(IS_TOWER_RESPONSE, false));
-    dispatch(changeAddGoods(WRITE_TOWER_BIZIDS, value));
+    dispatch(changeAddGoods(WRITE_TOWER_BIZIDS, value.trim()));
     if (value !== '') {
       this.emitChangeDebounced(event);
     }
@@ -38,60 +38,68 @@ class TowerActivity extends Component {
     const { value } = event.target;
     const { dispatch, startTime, endTime } = this.props;
     const replaceValue = value.replace(/[\r\n]/g, '').trim();
-    checkTowerSkuId({
-      ids: replaceValue,
-      startDate: startTime,
-      endDate: endTime,
-    }).then(response => {
-      dispatch(changeAddGoods(IS_TOWER_RESPONSE, true));
-      if (response.status === 200) {
-        const { code, message: responseMessage, result } = response.data;
-        if (code === RESPONSE_CODE_ZERO) {
-          dispatch(changeAddGoods(IS_TOWER_RESPONSE, true));
-          dispatch(changeAddGoods(WRITE_TOWER_BIZIDS, replaceValue));
-          message.success('输入的通天塔活动id均有效');
-        } else if (code === RESPONSE_CODE_THREE) {
-          const shareActivityFails = result.shareActivityFails ? result.shareActivityFails : null;
-          const repeatData = result.repeatData ? result.repeatData : null;
-          const tongtianActivityFails = result.tongtianActivityFails
-            ? result.tongtianActivityFails
-            : null;
-          message.warning(
-            <Fragment>
-              {responseMessage}，
-              {shareActivityFails ? (
-                <Div styleStr={'color:red; max-width:400px; font-size: 12px'}>
-                  通天塔活动参与的分享有礼活动未结束:{shareActivityFails.join()}
-                </Div>
-              ) : (
-                <Fragment />
-              )}
-              {repeatData ? (
-                <Div styleStr={'color:red; max-width:400px; font-size: 12px'}>
-                  重复的sku数据:{repeatData.join()}
-                </Div>
-              ) : (
-                <Fragment />
-              )}
-              {tongtianActivityFails ? (
-                <Div styleStr={'color:red; max-width:400px; font-size: 12px'}>
-                  通天塔活动不合法:{tongtianActivityFails.join()}
-                </Div>
-              ) : (
-                <Fragment />
-              )}
-            </Fragment>,
-            5
-          );
-          dispatch(changeAddGoods(IS_TOWER_RESPONSE, false));
+    if (value !== '') {
+      checkTowerSkuId({
+        ids: replaceValue,
+        startDate: startTime,
+        endDate: endTime,
+      }).then(response => {
+        dispatch(changeAddGoods(IS_TOWER_RESPONSE, true));
+        if (response.status === 200) {
+          const { code, message: responseMessage, result } = response.data;
+          if (code === RESPONSE_CODE_ZERO) {
+            dispatch(changeAddGoods(IS_TOWER_RESPONSE, true));
+            dispatch(changeAddGoods(WRITE_TOWER_BIZIDS, replaceValue));
+            message.success('输入的通天塔活动id均有效');
+          } else if (code === RESPONSE_CODE_THREE) {
+            const shareActivityFails = result.shareActivityFails ? result.shareActivityFails : null;
+            const repeatData = result.repeatData ? result.repeatData : null;
+            const tongtianActivityFails = result.tongtianActivityFails
+              ? result.tongtianActivityFails
+              : null;
+            message.warning(
+              <Fragment>
+                {responseMessage}，
+                {shareActivityFails ? (
+                  <Div
+                    styleStr={'color:red; max-width:400px; font-size: 12px; word-wrap: break-word;'}
+                  >
+                    通天塔活动参与的分享有礼活动未结束:{shareActivityFails.join()}
+                  </Div>
+                ) : (
+                  <Fragment />
+                )}
+                {repeatData ? (
+                  <Div
+                    styleStr={'color:red; max-width:400px; font-size: 12px; word-wrap: break-word;'}
+                  >
+                    重复的sku数据:{repeatData.join()}
+                  </Div>
+                ) : (
+                  <Fragment />
+                )}
+                {tongtianActivityFails ? (
+                  <Div
+                    styleStr={'color:red; max-width:400px; font-size: 12px; word-wrap: break-word;'}
+                  >
+                    通天塔活动不合法:{tongtianActivityFails.join()}
+                  </Div>
+                ) : (
+                  <Fragment />
+                )}
+              </Fragment>,
+              5
+            );
+            dispatch(changeAddGoods(IS_TOWER_RESPONSE, false));
+          } else {
+            message.error(responseMessage);
+            dispatch(changeAddGoods(IS_TOWER_RESPONSE, false));
+          }
         } else {
-          message.error(responseMessage);
-          dispatch(changeAddGoods(IS_TOWER_RESPONSE, false));
+          message.error('网络连接失败');
         }
-      } else {
-        message.error('网络连接失败');
-      }
-    });
+      });
+    }
   };
 
   render() {
